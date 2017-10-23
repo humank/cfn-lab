@@ -27,3 +27,38 @@ Resources:
                 PublicSubnet2CIDR:  10.180.16.0/21
                 PrivateSubnet1CIDR: 10.180.24.0/21
                 PrivateSubnet2CIDR: 10.180.32.0/21
+    SecurityGroups:
+        Type: AWS::CloudFormation::Stack
+        Properties:
+            TemplateURL: https://s3.us-east-2.amazonaws.com/cnf-stackset-lab-20171116-dlink/security-groups.yml
+            Parameters: 
+                EnvironmentName: !Ref AWS::StackName
+                VPC: !GetAtt VPC.Outputs.VPC
+
+    ALB:
+        Type: AWS::CloudFormation::Stack
+        Properties:
+            TemplateURL: https://s3.amazonaws.com/cnf-stackset-lab-20171116-dlink/load-balancers.yml
+            Parameters:
+                EnvironmentName: !Ref AWS::StackName
+                VPC: !GetAtt VPC.Outputs.VPC
+                Subnets: !GetAtt VPC.Outputs.PublicSubnets
+                SecurityGroup: !GetAtt SecurityGroups.Outputs.LoadBalancerSecurityGroup
+
+    # EC2 還需要整理
+    #EC2:
+    #    Type: AWS::CloudFormation::Stack
+    #    Properties:
+    #        TemplateURL: https://s3.amazonaws.com/cnf-stackset-lab-20171116-dlink/ec2.yml
+    
+    RDS:
+        Type: AWS::CloudFormation::Stack
+        Properties:
+            TemplateURL: https://s3.amazonaws.com/cnf-stackset-lab-20171116-dlink/rds.yml
+            Parameters:
+            EnvironmentName: !Ref AWS::StackName
+            VPC: !GetAtt VPC.Outputs.VPC
+            Subnets: !GetAtt VPC.Outputs.PrivateSubnets
+            SecurityGroup: !GetAtt SecurityGroups.Outputs.DatabaseSecurityGroup
+
+

@@ -47,12 +47,40 @@ Resources:
                 - Key: Name
                   Value: !Sub ${EnvironmentName}-LoadBalancers
 
+    DbSecurityGroup:
+        Type: AWS::EC2::SecurityGroup
+        Properties:
+            GroupDescription: Enable access to the RDS DB
+        VpcId: !Ref VPC
+        SecurityGroupEgress:
+            - CidrIp: 0.0.0.0/0
+                IpProtocol: tcp
+                ToPort: 3306
+                FromPort: 3306
+            - CidrIp: 0.0.0.0/0
+                IpProtocol: tcp
+                ToPort: 5432
+                FromPort: 5432
+        Tags:
+            - Key: Name
+            Value: !Sub "${AWS::StackName}-DbSecurityGroup"
+
 Outputs:
 
     ECSHostSecurityGroup: 
         Description: A reference to the security group for ECS hosts
         Value: !Ref ECSHostSecurityGroup
+        Export:
+            Name: 
 
     LoadBalancerSecurityGroup:
         Description: A reference to the security group for load balancers
         Value: !Ref LoadBalancerSecurityGroup
+        Export:
+            Name: !Sub "${AWS::StackName}-ELBSecurityGroupID"
+
+    DatabaseSecurityGroup:
+    Description: Security group ID for RDS database
+    Value: !GetAtt DbSecurityGroup.GroupId
+    Export:
+      Name: !Sub "${AWS::StackName}-DatabaseGroupID"

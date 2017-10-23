@@ -1,0 +1,30 @@
+Description: >
+    Demonstrate a centralize managed system parameters via EC2 Parameter Store.
+Description: "Create SSM Parameter for Databasae usage"
+Resources:
+  DatabaseUser:
+    Type: "AWS::SSM::Parameter"
+    Properties:
+      #Naming convention : /environment/region/business app/component/parameter
+      Name: "/Prod/US-east-1/SimpleWeb/Database/DatabaseUser"
+      Type: "String"
+      Value: "simpleweb"
+      Description: "DatabaseUser for SimpleWeb application runs on US-east-1 production env."
+
+  DatabasePassword:
+      Type: "AWS::SSM::Parameter"
+      Properties:
+        #Naming convention : /environment/region/business app/component/parameter
+        Name: "/Prod/US-east-1/SimpleWeb/Database/DatabasePassword"
+        Type: "String"
+        Value: "simpleweb"
+        Description: "DatabasePassword for SimpleWeb application runs on US-east-1 production env."      
+
+  DatabaseName:
+      Type: "AWS::SSM::Parameter"
+      Properties:
+        #Naming convention : /environment/region/business app/component/parameter
+        Name: "/Prod/US-east-1/SimpleWeb/Database/DatabaseName"
+        Type: "String"
+        Value: "simpleweb"
+        Description: "DatabaseName for SimpleWeb application runs on US-east-1 production env."      
