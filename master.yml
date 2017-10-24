@@ -1,3 +1,8 @@
+# admin user should appy the following stack first, 
+# AWSCloudFormationStackSetAdministrationRole
+# AWSCloudFormationStackSetExecutionRole
+
+
 Description: >
 
     This template deploys a VPC, with a pair of public and private subnets spread 
@@ -60,5 +65,13 @@ Resources:
             VPC: !GetAtt VPC.Outputs.VPC
             Subnets: !GetAtt VPC.Outputs.PrivateSubnets
             SecurityGroup: !GetAtt SecurityGroups.Outputs.DatabaseSecurityGroup
+            DatabaseUser: dlinkdemo
+            DatabasePassword: dlinkdemo
+            DatabaseName: dlinkdemo
+            DatabaseSize: 5
+            DatabaseEngine: mysql
+            DatabaseInstanceClass: db.t2.micro
+
+
 
 

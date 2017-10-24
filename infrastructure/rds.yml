@@ -3,7 +3,7 @@ AWSTemplateFormatVersion: '2010-09-09'
 # Database stack creation prerequisite:  first create a VPC stack.
 Parameters:
 
-  NetworkStackName:
+  EnvironmentName:
     Description: Name of an active CloudFormation stack that contains networking resources.
     Type: String
     MinLength: 1
@@ -132,7 +132,7 @@ Resources:
       DBSubnetGroupName: !Ref DbSubnetGroupb
       VPCSecurityGroups:
       - !ImportValue
-          "Fn::Sub": "${NetworkStackName}-DatabaseGroupID"
+          "Fn::Sub": "${EnvironmentName}-DatabaseGroupID"
       Engine: !Ref DatabaseEngine
       DBName: !Ref DatabaseName
       MasterUsername: !Ref DatabaseUser
@@ -148,9 +148,9 @@ Resources:
       DBSubnetGroupDescription: RDS DB subnet group
       SubnetIds:
       - !ImportValue
-          "Fn::Sub": "${NetworkStackName}-PrivateSubnet1ID"
+          "Fn::Sub": "${EnvironmentName}-PrivateSubnet1ID"
       - !ImportValue
-          "Fn::Sub": "${NetworkStackName}-PrivateSubnet2ID"
+          "Fn::Sub": "${EnvironmentName}-PrivateSubnet2ID"
 
 Outputs:
 
@@ -181,4 +181,4 @@ Outputs:
 
 
 ## notice.
-## The NetworkStackName is coming from existing deployed vpc stackname, if u want to leverage resource id , should take from !Ref.     
+## The EnvironmentName is coming from existing deployed vpc stackname, if u want to leverage resource id , should take from !Ref.     
