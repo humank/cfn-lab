@@ -61,16 +61,16 @@ Resources:
         Properties:
             TemplateURL: https://s3.amazonaws.com/cnf-stackset-lab-20171116-dlink/rds.yml
             Parameters:
-            EnvironmentName: !Ref AWS::StackName
-            VPC: !GetAtt VPC.Outputs.VPC
-            Subnets: !GetAtt VPC.Outputs.PrivateSubnets
-            SecurityGroup: !GetAtt SecurityGroups.Outputs.DatabaseSecurityGroup
-            DatabaseUser: dlinkdemo
-            DatabasePassword: dlinkdemo
-            DatabaseName: dlinkdemo
-            DatabaseSize: 5
-            DatabaseEngine: mysql
-            DatabaseInstanceClass: db.t2.micro
+                EnvironmentName: !Ref AWS::StackName
+                VPC: !GetAtt VPC.Outputs.VPC
+                Subnets: !GetAtt VPC.Outputs.PrivateSubnets
+                SecurityGroup: !GetAtt SecurityGroups.Outputs.DatabaseSecurityGroup
+                DatabaseUser: dlinkdemo
+                DatabasePassword: dlinkdemo
+                DatabaseName: dlinkdemo
+                DatabaseSize: 5
+                DatabaseEngine: mysql
+                DatabaseInstanceClass: db.t2.micro
 
 
 

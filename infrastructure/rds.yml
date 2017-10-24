@@ -11,7 +11,7 @@ Parameters:
     AllowedPattern: "^[a-zA-Z][-a-zA-Z0-9]*$"
 
   DatabaseUser:
-    Default: startupadmin
+    Default: dlinkdemo
     NoEcho: 'true'
     Type: String
     Description: Database admin account name
@@ -21,7 +21,7 @@ Parameters:
     ConstraintDescription: Name must begin with a letter and contain only alphanumeric characters.
 
   DatabasePassword:
-    Default: 0bee082a464
+    Default: dlinkdemo
     NoEcho: 'true'
     Type: String
     Description: Database admin account password
@@ -31,7 +31,7 @@ Parameters:
     ConstraintDescription: Password must contain only alphanumeric characters.
 
   DatabaseName:
-    Default: StartupDB
+    Default: dlinkdemo
     Type: String
     Description: Database name
     MinLength: 1
@@ -77,22 +77,6 @@ Parameters:
       - db.r3.4xlarge
       - db.r3.8xlarge
       
-  EnvironmentName:
-    Description: Environment name, either dev or prod.
-    Type: String
-    MinLength: 1
-    MaxLength: 255
-    AllowedValues: 
-      - dev
-      - prod
-    ConstraintDescription: Specify either dev or prod.
-    
-
-Conditions: 
-
-  CreateProdEnv: !Equals [ !Ref EnvironmentName, prod ]
-  
-      
 Resources:
 
 # segment for create parameter stores resource from the user input secured info
@@ -126,10 +110,20 @@ Resources:
 
 # segment for Database
 
+  DbSubnetGroup:
+    Type: AWS::RDS::DBSubnetGroup
+    Properties:
+      DBSubnetGroupDescription: RDS DB subnet group
+      SubnetIds:
+      - !ImportValue
+          "Fn::Sub": "${EnvironmentName}-PrivateSubnet1ID"
+      - !ImportValue
+          "Fn::Sub": "${EnvironmentName}-PrivateSubnet2ID"
+ 
   Database:
     Type: AWS::RDS::DBInstance
     Properties:
-      DBSubnetGroupName: !Ref DbSubnetGroupb
+      DBSubnetGroupName: !Ref DbSubnetGroup
       VPCSecurityGroups:
       - !ImportValue
           "Fn::Sub": "${EnvironmentName}-DatabaseGroupID"
@@ -142,15 +136,7 @@ Resources:
       StorageType: gp2
       MultiAZ: !If [ CreateProdEnv, 'true', 'false' ]
 
-  DbSubnetGroup:
-    Type: AWS::RDS::DBSubnetGroup
-    Properties:
-      DBSubnetGroupDescription: RDS DB subnet group
-      SubnetIds:
-      - !ImportValue
-          "Fn::Sub": "${EnvironmentName}-PrivateSubnet1ID"
-      - !ImportValue
-          "Fn::Sub": "${EnvironmentName}-PrivateSubnet2ID"
+  
 
 Outputs:
 
