@@ -86,4 +86,4 @@ Outputs:
         Description: Security group ID for RDS database
         Value: !GetAtt DbSecurityGroup.GroupId
         Export:
-            Name: !Sub "${AWS::StackName}-DatabaseGroupID"
+            Name: !Sub "${AWS::StackName}-DbSecurityGroupID"

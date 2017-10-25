@@ -10,6 +10,10 @@ Parameters:
     MaxLength: 255
     AllowedPattern: "^[a-zA-Z][-a-zA-Z0-9]*$"
 
+  DBSecurityGroup:
+    Description: Name of a existed DBSecurityGroup to apply.
+    Type: String
+
   DatabaseUser:
     Default: dlinkdemo
     NoEcho: 'true'
@@ -124,9 +128,9 @@ Resources:
     Type: AWS::RDS::DBInstance
     Properties:
       DBSubnetGroupName: !Ref DbSubnetGroup
-      VPCSecurityGroups:
-      - !ImportValue
-          "Fn::Sub": "${EnvironmentName}-DatabaseGroupID"
+      VPCSecurityGroups: !Ref SecurityGroup
+     # - !ImportValue
+     #     "Fn::Sub": "${EnvironmentName}-DatabaseGroupID"
       Engine: !Ref DatabaseEngine
       DBName: !Ref DatabaseName
       MasterUsername: !Ref DatabaseUser

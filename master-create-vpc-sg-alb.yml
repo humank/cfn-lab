@@ -5,7 +5,19 @@
 
 Description: >
 
-    Kim's Lab demo.
+    This template deploys a VPC, with a pair of public and private subnets spread 
+    across two Availabilty Zones. It deploys an Internet Gateway, with a default 
+    route on the public subnets. It deploys a pair of NAT Gateways (one in each AZ), 
+    and default routes for them in the private subnets.
+
+    It then deploys a highly available ECS cluster using an AutoScaling Group, with 
+    ECS hosts distributed across multiple Availability Zones. 
+
+    Finally, it deploys a pair of example ECS services from containers published in 
+    Amazon EC2 Container Registry (Amazon ECR).
+
+    Last Modified: 22nd September 2016
+    Author: Paul Maddox <pmaddox@amazon.com>
 
 Resources:
 
@@ -38,33 +50,6 @@ Resources:
                 VPC: !GetAtt VPC.Outputs.VPC
                 Subnets: !GetAtt VPC.Outputs.PublicSubnets
                 SecurityGroup: !GetAtt SecurityGroups.Outputs.LoadBalancerSecurityGroup
-
-    # EC2 還需要整理
-    #EC2:
-    #    Type: AWS::CloudFormation::Stack
-    #    Properties:
-    #        TemplateURL: https://s3.amazonaws.com/cnf-stackset-lab-20171116-dlink/ec2.yml
-
-
-
-    RDS:
-        Type: AWS::CloudFormation::Stack
-        Properties:
-            TemplateURL: https://s3.amazonaws.com/cnf-stackset-lab-20171116-dlink/rds.yml
-            Parameters:
-                EnvironmentName: !Ref AWS::StackName
-                DBSecurityGroup: !GetAtt SecurityGroups.Outputs.DatabaseSecurityGroup
-                DatabaseUser: dlinkdemo
-                DatabasePassword: dlinkdemo
-                DatabaseName: dlinkdemo
-                DatabaseSize: 5
-                DatabaseEngine: mysql
-                DatabaseInstanceClass: db.t2.micro
-
-                
-                
-                #VPC: !GetAtt VPC.Outputs.VPC
-                #Subnets: !GetAtt VPC.Outputs.PrivateSubnets
                
 
 
