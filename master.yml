@@ -14,7 +14,7 @@ Resources:
         Properties:
             TemplateURL: https://s3.us-east-2.amazonaws.com/cnf-stackset-lab-20171116-dlink/vpc.yml
             Parameters:
-                EnvironmentName:    !Ref AWS::StackName
+                EnvironmentName:    !Ref AWS::StackName                
                 VpcCIDR:            10.180.0.0/16
                 PublicSubnet1CIDR:  10.180.8.0/21
                 PublicSubnet2CIDR:  10.180.16.0/21

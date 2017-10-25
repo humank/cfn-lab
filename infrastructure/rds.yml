@@ -128,7 +128,7 @@ Resources:
     Type: AWS::RDS::DBInstance
     Properties:
       DBSubnetGroupName: !Ref DbSubnetGroup
-      VPCSecurityGroups: !Ref SecurityGroup
+      VPCSecurityGroups: !Ref DBSecurityGroup
      # - !ImportValue
      #     "Fn::Sub": "${EnvironmentName}-DatabaseGroupID"
       Engine: !Ref DatabaseEngine
