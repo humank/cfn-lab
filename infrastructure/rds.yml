@@ -120,9 +120,10 @@ Resources:
       DBSubnetGroupDescription: RDS DB subnet group
       SubnetIds:
       - !ImportValue
-          "Fn::Sub": "${EnvironmentName}-PrivateSubnet1ID"
+          "Fn::Sub": "${EnvironmentName}-PrivateSubnet1"
       - !ImportValue
-          "Fn::Sub": "${EnvironmentName}-PrivateSubnet2ID"
+          "Fn::Sub": "${EnvironmentName}-PrivateSubnet2"
+          
  
   Database:
     Type: AWS::RDS::DBInstance
@@ -138,9 +139,7 @@ Resources:
       DBInstanceClass: !Ref DatabaseInstanceClass
       AllocatedStorage: !Ref DatabaseSize
       StorageType: gp2
-      MultiAZ: !If [ CreateProdEnv, 'true', 'false' ]
-
-  
+      MultiAZ: 'true'
 
 Outputs:
 
@@ -167,8 +166,3 @@ Outputs:
     Value: !Ref DatabasePassword
     Export:
       Name: !Sub "${AWS::StackName}-DatabasePassword"
-    
-
-
-## notice.
-## The EnvironmentName is coming from existing deployed vpc stackname, if u want to leverage resource id , should take from !Ref.     
