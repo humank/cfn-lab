@@ -6,7 +6,7 @@ Description: >
 
 Parameters:
 
-    EnvironmentName:
+    StackName:
         Description: An environment name that will be prefixed to resource names
         Type: String
 
@@ -43,14 +43,14 @@ Resources:
             CidrBlock: !Ref VpcCIDR
             Tags: 
                 - Key: Name 
-                  Value: !Ref EnvironmentName
+                  Value: !Ref StackName
             
     InternetGateway:
         Type: AWS::EC2::InternetGateway
         Properties:
             Tags:
                 - Key: Name
-                  Value: !Ref EnvironmentName
+                  Value: !Ref StackName
             
     InternetGatewayAttachment:
         Type: AWS::EC2::VPCGatewayAttachment
@@ -67,7 +67,7 @@ Resources:
             MapPublicIpOnLaunch: true
             Tags: 
                 - Key: Name 
-                  Value: !Sub ${EnvironmentName} Public Subnet (AZ1)
+                  Value: !Sub ${StackName} Public Subnet (AZ1)
 
     PublicSubnet2: 
         Type: AWS::EC2::Subnet
@@ -78,7 +78,7 @@ Resources:
             MapPublicIpOnLaunch: true
             Tags: 
                 - Key: Name 
-                  Value: !Sub ${EnvironmentName} Public Subnet (AZ2)
+                  Value: !Sub ${StackName} Public Subnet (AZ2)
 
     PrivateSubnet1: 
         Type: AWS::EC2::Subnet
@@ -89,7 +89,7 @@ Resources:
             MapPublicIpOnLaunch: false
             Tags: 
                 - Key: Name 
-                  Value: !Sub ${EnvironmentName} Private Subnet (AZ1)
+                  Value: !Sub ${StackName} Private Subnet (AZ1)
 
     PrivateSubnet2: 
         Type: AWS::EC2::Subnet
@@ -100,7 +100,7 @@ Resources:
             MapPublicIpOnLaunch: false
             Tags: 
                 - Key: Name 
-                  Value: !Sub ${EnvironmentName} Private Subnet (AZ2)
+                  Value: !Sub ${StackName} Private Subnet (AZ2)
 
     NatGateway1EIP:
         Type: AWS::EC2::EIP
@@ -132,7 +132,7 @@ Resources:
             VpcId: !Ref VPC
             Tags: 
                 - Key: Name 
-                  Value: !Sub ${EnvironmentName} Public Routes
+                  Value: !Sub ${StackName} Public Routes
 
     DefaultPublicRoute: 
         Type: AWS::EC2::Route
@@ -161,7 +161,7 @@ Resources:
             VpcId: !Ref VPC
             Tags: 
                 - Key: Name 
-                  Value: !Sub ${EnvironmentName} Private Routes (AZ1)
+                  Value: !Sub ${StackName} Private Routes (AZ1)
 
     DefaultPrivateRoute1:
         Type: AWS::EC2::Route
@@ -182,7 +182,7 @@ Resources:
             VpcId: !Ref VPC
             Tags: 
                 - Key: Name 
-                  Value: !Sub ${EnvironmentName} Private Routes (AZ2)
+                  Value: !Sub ${StackName} Private Routes (AZ2)
 
     DefaultPrivateRoute2:
         Type: AWS::EC2::Route
@@ -202,44 +202,67 @@ Outputs:
     StackName:
         Value:
             !Ref AWS::StackName
-    VPC: 
+    VpcId: 
         Description: A reference to the created VPC
         Value: !Ref VPC
         Export:
-          Name: !Sub "${AWS::StackName}-VpcID"
+          Name: 
+            "Fn::Sub": 
+                - ${StackName}-VpcId
+                - StackName: !Ref AWS::StackName
 
     PublicSubnets:
         Description: A list of the public subnets
         Value: !Join [ ",", [ !Ref PublicSubnet1, !Ref PublicSubnet2 ]]
         Export:
-            Name: !Sub "${AWS::StackName}-PublicSubnetSets"
+            Name:
+                "Fn::Sub": 
+                    - ${StackName}-PublicSubnetSets
+                    - StackName: !Ref AWS::StackName
 
     PrivateSubnets:
         Description: A list of the private subnets
         Value: !Join [ ",", [ !Ref PrivateSubnet1, !Ref PrivateSubnet2 ]]
         Export:
-            Name: !Sub "${AWS::StackName}-PrivateSubnetSets"
+            Name:
+                "Fn::Sub": 
+                    - ${StackName}-PrivateSubnetSets
+                    - StackName: !Ref AWS::StackName
+
 
     PublicSubnet1:
         Description: A reference to the public subnet in the 1st Availability Zone
         Value: !Ref PublicSubnet1
         Export:
-            Name: !Sub "${AWS::StackName}-PublicSubnet1"
+            Name:
+                "Fn::Sub": 
+                    - ${StackName}-PublicSubnet1
+                    - StackName: !Ref AWS::StackName
 
     PublicSubnet2: 
         Description: A reference to the public subnet in the 2nd Availability Zone
         Value: !Ref PublicSubnet2
         Export:
-            Name: !Sub "${AWS::StackName}-PublicSubnet2"
+            Name:
+                "Fn::Sub": 
+                    - ${StackName}-PublicSubnet2
+                    - StackName: !Ref AWS::StackName
 
     PrivateSubnet1:
         Description: A reference to the private subnet in the 1st Availability Zone
         Value: !Ref PrivateSubnet1
         Export:
-            Name: !Sub "${AWS::StackName}-PrivateSubnet1"
+            Name:
+                "Fn::Sub": 
+                    - ${StackName}-PrivateSubnet1
+                    - StackName: !Ref AWS::StackName
+            
 
     PrivateSubnet2: 
         Description: A reference to the private subnet in the 2nd Availability Zone
         Value: !Ref PrivateSubnet2
         Export:
-            Name: !Sub "${AWS::StackName}-PrivateSubnet2"
+            Name:
+                "Fn::Sub": 
+                    - ${StackName}-PrivateSubnet2
+                    - StackName: !Ref AWS::StackName

@@ -4,7 +4,7 @@ Description: >
 
 Parameters:
 
-    EnvironmentName:
+    StackName:
         Description: An environment name that will be prefixed to resource names
         Type: String
 
@@ -31,7 +31,7 @@ Resources:
                 - !Ref SecurityGroup
             Tags: 
                 - Key: Name
-                  Value: !Ref EnvironmentName
+                  Value: !Ref StackName
 
     LoadBalancerListener:
         Type: AWS::ElasticLoadBalancingV2::Listener
@@ -53,20 +53,35 @@ Resources:
            
 Outputs:
 
+    StackName:
+        Value:
+            !Ref AWS::StackName
+
     LoadBalancer:
         Description: A reference to the Application Load Balancer
         Value: !Ref LoadBalancer
         Export:
-            Name: !Sub "${AWS::StackName}-LoadBalancerID" 
+            Name: 
+                "Fn::Sub": 
+                    - ${StackName}-LoadBalancer
+                    - StackName: !Ref AWS::StackName
 
     LoadBalancerUrl:
         Description: The URL of the ALB
         Value: !GetAtt LoadBalancer.DNSName
         Export:
-            Name: !Sub "${AWS::StackName}-LoadBalancerUrl" 
+            Name: 
+                "Fn::Sub": 
+                    - ${StackName}-LoadBalancerUrl
+                    - StackName: !Ref AWS::StackName
 
-    Listener:
+    LoadBalancerListener:
         Description: A reference to a port 80 listener
         Value: !Ref LoadBalancerListener  
+        Export:
+            Name: 
+                "Fn::Sub": 
+                    - ${StackName}-LoadBalancerListener
+                    - StackName: !Ref AWS::StackName
 
     

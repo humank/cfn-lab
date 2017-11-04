@@ -3,10 +3,9 @@
 # AWSCloudFormationStackSetExecutionRole
 
 
+
 Description: >
-
     Kim's Lab demo.
-
 Resources:
 
     VPC:
@@ -14,7 +13,7 @@ Resources:
         Properties:
             TemplateURL: https://s3.us-east-2.amazonaws.com/cnf-stackset-lab-20171116-dlink/vpc.yml
             Parameters:
-                EnvironmentName:    !Ref AWS::StackName                
+                StackName:    !Ref AWS::StackName                
                 VpcCIDR:            10.180.0.0/16
                 PublicSubnet1CIDR:  10.180.8.0/21
                 PublicSubnet2CIDR:  10.180.16.0/21
@@ -26,18 +25,22 @@ Resources:
         Properties:
             TemplateURL: https://s3.us-east-2.amazonaws.com/cnf-stackset-lab-20171116-dlink/security-groups.yml
             Parameters: 
-                EnvironmentName: !Ref AWS::StackName
-                VPC: !GetAtt VPC.Outputs.VPC
+                StackName: !GetAtt ["VPC", "Outputs.StackName"] 
+                VPC: !GetAtt ["VPC","Outputs.VpcId"]
+
 
     ALB:
         Type: AWS::CloudFormation::Stack
         Properties:
             TemplateURL: https://s3.amazonaws.com/cnf-stackset-lab-20171116-dlink/load-balancers.yml
             Parameters:
-                EnvironmentName: !Ref AWS::StackName
-                VPC: !GetAtt VPC.Outputs.VPC
-                Subnets: !GetAtt VPC.Outputs.PublicSubnets
-                SecurityGroup: !GetAtt SecurityGroups.Outputs.LoadBalancerSecurityGroup
+                StackName: !GetAtt ["VPC", "Outputs.StackName"] 
+                VPC: !GetAtt ["VPC","Outputs.VpcId"]
+                Subnets: !GetAtt ["VPC","Outputs.PublicSubnets"]
+                SecurityGroup: !GetAtt ["SecurityGroups","Outputs.LoadBalancerSecurityGroup"]
+               
+
+
 
     # EC2 還需要整理
     #EC2:
@@ -52,8 +55,12 @@ Resources:
         Properties:
             TemplateURL: https://s3.amazonaws.com/cnf-stackset-lab-20171116-dlink/rds.yml
             Parameters:
-                EnvironmentName: !Ref AWS::StackName
-                DBSecurityGroup: !GetAtt SecurityGroups.Outputs.DatabaseSecurityGroup
+
+                StackName: !GetAtt ["VPC", "Outputs.StackName"] 
+                DBSecurityGroup: !GetAtt ["SecurityGroups","Outputs.DbSecurityGroup"]
+                PrivateSubnet1: !GetAtt ["VPC", "Outputs.PrivateSubnet1"] 
+                PrivateSubnet2: !GetAtt ["VPC", "Outputs.PrivateSubnet2"]
+                PrivateSubnets: !GetAtt ["VPC", "Outputs.PrivateSubnets"] 
                 DatabaseUser: dlinkdemo
                 DatabasePassword: dlinkdemo
                 DatabaseName: dlinkdemo

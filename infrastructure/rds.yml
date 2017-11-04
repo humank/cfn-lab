@@ -3,45 +3,40 @@ AWSTemplateFormatVersion: '2010-09-09'
 # Database stack creation prerequisite:  first create a VPC stack.
 Parameters:
 
-  EnvironmentName:
+  StackName:
     Description: Name of an active CloudFormation stack that contains networking resources.
     Type: String
-    MinLength: 1
-    MaxLength: 255
-    AllowedPattern: "^[a-zA-Z][-a-zA-Z0-9]*$"
 
   DBSecurityGroup:
     Description: Name of a existed DBSecurityGroup to apply.
     Type: String
 
+  PrivateSubnets:
+      Description: Name of privatesubnets for rds.
+      Type: String
+
+  PrivateSubnet1:
+    Description: Name of a existed PrivateSubnet1 to apply.
+    Type: String
+
+  PrivateSubnet2:
+    Description: Name of a existed PrivateSubnet2 to apply.
+    Type: String
+  
   DatabaseUser:
     Default: dlinkdemo
     NoEcho: 'true'
     Type: String
-    Description: Database admin account name
-    MinLength: 5
-    MaxLength: 16
-    AllowedPattern: "[a-zA-Z][a-zA-Z0-9]*"
-    ConstraintDescription: Name must begin with a letter and contain only alphanumeric characters.
 
   DatabasePassword:
     Default: dlinkdemo
     NoEcho: 'true'
     Type: String
-    Description: Database admin account password
-    MinLength: 6
-    MaxLength: 41
-    #AllowedPattern: "[a-zA-Z0-9]*"
-    ConstraintDescription: Password must contain only alphanumeric characters.
 
   DatabaseName:
     Default: dlinkdemo
     Type: String
     Description: Database name
-    MinLength: 1
-    MaxLength: 30
-    AllowedPattern: "[a-zA-Z][a-zA-Z0-9]*"
-    ConstraintDescription: Name must begin with a letter and contain only alphanumeric characters.
     
   DatabaseSize:
     Default: 5
@@ -119,19 +114,19 @@ Resources:
     Properties:
       DBSubnetGroupDescription: RDS DB subnet group
       SubnetIds:
-      - !ImportValue
-          "Fn::Sub": "${EnvironmentName}-PrivateSubnet1"
-      - !ImportValue
-          "Fn::Sub": "${EnvironmentName}-PrivateSubnet2"
+      - !Ref PrivateSubnet1
+      - !Ref PrivateSubnet2
+      
+      #- !ImportValue
+      #    "Fn::Sub": "${StackName}-PrivateSubnet1"
+      #- !ImportValue
+      #    "Fn::Sub": "${StackName}-PrivateSubnet2"
           
  
   Database:
     Type: AWS::RDS::DBInstance
     Properties:
       DBSubnetGroupName: !Ref DbSubnetGroup
-      VPCSecurityGroups: !Ref DBSecurityGroup
-     # - !ImportValue
-     #     "Fn::Sub": "${EnvironmentName}-DatabaseGroupID"
       Engine: !Ref DatabaseEngine
       DBName: !Ref DatabaseName
       MasterUsername: !Ref DatabaseUser
