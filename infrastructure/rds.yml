@@ -13,10 +13,6 @@ Parameters:
     Description: Name of a existed DBSecurityGroup to apply.
     Type: String
 
-  PrivateSubnets:
-      Description: Name of privatesubnets for rds.
-      Type: String
-
   PrivateSubnet1:
     Description: Name of a existed PrivateSubnet1 to apply.
     Type: String

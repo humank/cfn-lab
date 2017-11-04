@@ -15,6 +15,10 @@ Parameters:
     AllowedValues: [m3.medium,m3.large, m3.xlarge, m3.2xlarge, m4.large, m4.xlarge, m4.2xlarge, m4.4xlarge,m4.10xlarge,]
     ConstraintDescription: must be a valid EC2 instance type.
   
+  Subnets:
+    Description: WebServer EC2 instance locate in public subnet
+    Type: String
+
   SSHLocation:
     Description: Lockdown SSH access to the bastion host (default can be accessed
       from anywhere)
@@ -121,17 +125,47 @@ Mappings:
       HVMG2: NOT_SUPPORTED
       
 Resources:
-  EC2Instance:
+  EC2Instance-public1:
     Type: AWS::EC2::Instance
     Properties:
-      KeyName: !Ref 'KeyName'
+      #KeyName: !Ref 'KeyName'
       InstanceType: !Ref 'InstanceType'
       ImageId: !FindInMap [AWSRegionArch2AMI, !Ref 'AWS::Region', !FindInMap [AWSInstanceType2Arch,
           !Ref 'InstanceType', Arch]]
+      AvailabilityZone: !Select [ 0, !GetAZs ]
+      SubnetId:
+      Tags:
+
       SecurityGroups: [!Ref 'EC2SecurityGroup']
+      SecurityGroupIds:
+
       BlockDeviceMappings:
       - DeviceName: /dev/sdc
         VirtualName: ephemeral0
+      
+      UserData:
+
+  EC2Instance-public2:
+    Type: AWS::EC2::Instance
+    Properties:
+      #KeyName: !Ref 'KeyName'
+      InstanceType: !Ref 'InstanceType'
+      ImageId: !FindInMap [AWSRegionArch2AMI, !Ref 'AWS::Region', !FindInMap [AWSInstanceType2Arch,
+          !Ref 'InstanceType', Arch]]
+      AvailabilityZone: !Select [ 1, !GetAZs ]
+      SubnetId:
+      Tags:
+
+      SecurityGroups: [!Ref 'EC2SecurityGroup']
+      SecurityGroupIds:
+
+      BlockDeviceMappings:
+      - DeviceName: /dev/sdc
+        VirtualName: ephemeral0
+      
+      UserData:
+
+  
   EC2SecurityGroup:
     Type: AWS::EC2::SecurityGroup
     Properties:

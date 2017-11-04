@@ -42,33 +42,38 @@ Resources:
         Properties:
             TemplateURL: https://s3.amazonaws.com/cnf-stackset-lab-20171116-dlink/ec2.yml
             Parameters:
-                KeyName:
-                InstanceType: m3.medium
-                SSHLocation: 0.0.0.0/0
+                StackName: !GetAtt ["VPC", "Outputs.StackName"]
                 VPC: !GetAtt ["VPC","Outputs.VpcId"]
                 Subnets: !GetAtt ["VPC","Outputs.PublicSubnets"]
-                SecurityGroup:
-
+                SecurityGroup: !GetAtt ["SecurityGroups","Outputs.EC2HostSecurityGroup"]
+                #KeyName: kiminternallab
+                InstanceType: m3.medium
+                SSHLocation: 0.0.0.0/0
+                TagName: Name
+                TagValue: Prod-ec2-pubsubnet1
+                
     #EC2-Spot:
     #    Type: AWS::CloudFormation::Stack
     #    Properties:
     #        TemplateURL: https://s3.amazonaws.com/cnf-stackset-lab-20171116-dlink/ec2-spot.yml
 
-    RDS:
-        Type: AWS::CloudFormation::Stack
-        Properties:
-            TemplateURL: https://s3.amazonaws.com/cnf-stackset-lab-20171116-dlink/rds.yml
-            Parameters:
+    
+    
+    #Temporary to disable create database
+    # RDS:
+    #     Type: AWS::CloudFormation::Stack
+    #     Properties:
+    #         TemplateURL: https://s3.amazonaws.com/cnf-stackset-lab-20171116-dlink/rds.yml
+    #         Parameters:
 
-                StackName: !GetAtt ["VPC", "Outputs.StackName"] 
-                DBSecurityGroup: !GetAtt ["SecurityGroups","Outputs.DbSecurityGroup"]
-                PrivateSubnet1: !GetAtt ["VPC", "Outputs.PrivateSubnet1"] 
-                PrivateSubnet2: !GetAtt ["VPC", "Outputs.PrivateSubnet2"]
-                PrivateSubnets: !GetAtt ["VPC", "Outputs.PrivateSubnets"] 
-                DatabaseUser: dlinkdemo
-                DatabasePassword: dlinkdemo
-                DatabaseName: dlinkdemo
-                DatabaseSize: 5
-                DatabaseEngine: mysql
-                DatabaseInstanceClass: db.m4.large
+    #             StackName: !GetAtt ["VPC", "Outputs.StackName"] 
+    #             DBSecurityGroup: !GetAtt ["SecurityGroups","Outputs.DbSecurityGroup"]
+    #             PrivateSubnet1: !GetAtt ["VPC", "Outputs.PrivateSubnet1"] 
+    #             PrivateSubnet2: !GetAtt ["VPC", "Outputs.PrivateSubnet2"] 
+    #             DatabaseUser: dlinkdemo
+    #             DatabasePassword: dlinkdemo
+    #             DatabaseName: dlinkdemo
+    #             DatabaseSize: 5
+    #             DatabaseEngine: mysql
+    #             DatabaseInstanceClass: db.m4.large
 
