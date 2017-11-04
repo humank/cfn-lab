@@ -1,9 +1,3 @@
-# admin user should appy the following stack first, 
-# AWSCloudFormationStackSetAdministrationRole
-# AWSCloudFormationStackSetExecutionRole
-
-
-
 Description: >
     Kim's Lab demo.
 Resources:
@@ -38,17 +32,27 @@ Resources:
                 VPC: !GetAtt ["VPC","Outputs.VpcId"]
                 Subnets: !GetAtt ["VPC","Outputs.PublicSubnets"]
                 SecurityGroup: !GetAtt ["SecurityGroups","Outputs.LoadBalancerSecurityGroup"]
-               
 
+    #create ec2 info
+    # 1. region 2. ami 3. tier 4. vpc 5. subnet 6. tag name 7. sg
+    # with default tenancy, default shutdown behavior for stop, add instance-volume for default
 
+    EC2:
+        Type: AWS::CloudFormation::Stack
+        Properties:
+            TemplateURL: https://s3.amazonaws.com/cnf-stackset-lab-20171116-dlink/ec2.yml
+            Parameters:
+                KeyName:
+                InstanceType: m3.medium
+                SSHLocation: 0.0.0.0/0
+                VPC: !GetAtt ["VPC","Outputs.VpcId"]
+                Subnets: !GetAtt ["VPC","Outputs.PublicSubnets"]
+                SecurityGroup:
 
-    # EC2 還需要整理
-    #EC2:
+    #EC2-Spot:
     #    Type: AWS::CloudFormation::Stack
     #    Properties:
-    #        TemplateURL: https://s3.amazonaws.com/cnf-stackset-lab-20171116-dlink/ec2.yml
-
-
+    #        TemplateURL: https://s3.amazonaws.com/cnf-stackset-lab-20171116-dlink/ec2-spot.yml
 
     RDS:
         Type: AWS::CloudFormation::Stack
@@ -66,12 +70,5 @@ Resources:
                 DatabaseName: dlinkdemo
                 DatabaseSize: 5
                 DatabaseEngine: mysql
-                DatabaseInstanceClass: db.t2.micro
-
-                
-                
-                #VPC: !GetAtt VPC.Outputs.VPC
-                #Subnets: !GetAtt VPC.Outputs.PrivateSubnets
-               
-
+                DatabaseInstanceClass: db.m4.large
 

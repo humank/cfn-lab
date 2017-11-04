@@ -1,6 +1,8 @@
 AWSTemplateFormatVersion: '2010-09-09'
-
 # Database stack creation prerequisite:  first create a VPC stack.
+
+Description: >
+    Create a rds-mysql in private subnet
 Parameters:
 
   StackName:
@@ -115,13 +117,7 @@ Resources:
       DBSubnetGroupDescription: RDS DB subnet group
       SubnetIds:
       - !Ref PrivateSubnet1
-      - !Ref PrivateSubnet2
-      
-      #- !ImportValue
-      #    "Fn::Sub": "${StackName}-PrivateSubnet1"
-      #- !ImportValue
-      #    "Fn::Sub": "${StackName}-PrivateSubnet2"
-          
+      - !Ref PrivateSubnet2          
  
   Database:
     Type: AWS::RDS::DBInstance

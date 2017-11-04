@@ -1,7 +1,5 @@
 Description: >
-    This template contains the security groups required by our entire stack.
-    We create them in a seperate nested template, so they can be referenced
-    by all of the other nested templates.
+    Create all the security gorups to support well-architected environment secuirty constraint.
 
 Parameters:
     
