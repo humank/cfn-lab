@@ -43,14 +43,11 @@ Resources:
             TemplateURL: https://s3.amazonaws.com/cnf-stackset-lab-20171116-dlink/ec2.yml
             Parameters:
                 StackName: !GetAtt ["VPC", "Outputs.StackName"]
-                VPC: !GetAtt ["VPC","Outputs.VpcId"]
                 Subnets: !GetAtt ["VPC","Outputs.PublicSubnets"]
-                SecurityGroup: !GetAtt ["SecurityGroups","Outputs.EC2HostSecurityGroup"]
-                #KeyName: kiminternallab
+                EC2HostSecurityGroup: !GetAtt ["SecurityGroups","Outputs.EC2HostSecurityGroup"]
+                KeyName: kiminternallab
                 InstanceType: m3.medium
                 SSHLocation: 0.0.0.0/0
-                TagName: Name
-                TagValue: Prod-ec2-pubsubnet1
                 
     #EC2-Spot:
     #    Type: AWS::CloudFormation::Stack
@@ -59,7 +56,7 @@ Resources:
 
     
     
-    #Temporary to disable create database
+    #Temporary to disable create database , the following config is fine.
     # RDS:
     #     Type: AWS::CloudFormation::Stack
     #     Properties:

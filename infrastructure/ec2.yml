@@ -3,6 +3,9 @@ AWSTemplateFormatVersion: '2010-09-09'
 Description:
   create ec2 instance for m3.medium
 Parameters:
+  StackName:
+        Description: An environment name that will be prefixed to resource names
+        Type: String
   KeyName:
     Description: Name of an existing EC2 KeyPair to enable SSH access to the web server
     Type: AWS::EC2::KeyPair::KeyName
@@ -17,7 +20,11 @@ Parameters:
   
   Subnets:
     Description: WebServer EC2 instance locate in public subnet
-    Type: String
+    Type: List<AWS::EC2::Subnet::Id>
+
+  EC2HostSecurityGroup:
+    Description: WebServer EC2 assigned with VPC Security Group
+    Type: List<AWS::EC2::SecurityGroup::Id>
 
   SSHLocation:
     Description: Lockdown SSH access to the bastion host (default can be accessed
@@ -125,46 +132,24 @@ Mappings:
       HVMG2: NOT_SUPPORTED
       
 Resources:
-  EC2Instance-public1:
+  EC2Instance:
     Type: AWS::EC2::Instance
     Properties:
-      #KeyName: !Ref 'KeyName'
+      KeyName: !Ref 'KeyName'
       InstanceType: !Ref 'InstanceType'
       ImageId: !FindInMap [AWSRegionArch2AMI, !Ref 'AWS::Region', !FindInMap [AWSInstanceType2Arch,
           !Ref 'InstanceType', Arch]]
       AvailabilityZone: !Select [ 0, !GetAZs ]
-      SubnetId:
+      SubnetId: !Select [ 0, !Ref Subnets ]
+      #SecurityGroups: [ !Ref EC2SecurityGroup ]
+      SecurityGroupIds: !Ref EC2HostSecurityGroup
       Tags:
-
-      SecurityGroups: [!Ref 'EC2SecurityGroup']
-      SecurityGroupIds:
-
+        -
+          Key: "Name"
+          Value: "ec2-pub1"
       BlockDeviceMappings:
       - DeviceName: /dev/sdc
         VirtualName: ephemeral0
-      
-      UserData:
-
-  EC2Instance-public2:
-    Type: AWS::EC2::Instance
-    Properties:
-      #KeyName: !Ref 'KeyName'
-      InstanceType: !Ref 'InstanceType'
-      ImageId: !FindInMap [AWSRegionArch2AMI, !Ref 'AWS::Region', !FindInMap [AWSInstanceType2Arch,
-          !Ref 'InstanceType', Arch]]
-      AvailabilityZone: !Select [ 1, !GetAZs ]
-      SubnetId:
-      Tags:
-
-      SecurityGroups: [!Ref 'EC2SecurityGroup']
-      SecurityGroupIds:
-
-      BlockDeviceMappings:
-      - DeviceName: /dev/sdc
-        VirtualName: ephemeral0
-      
-      UserData:
-
   
   EC2SecurityGroup:
     Type: AWS::EC2::SecurityGroup
@@ -176,6 +161,15 @@ Resources:
         ToPort: '22'
         CidrIp: !Ref 'SSHLocation'
 Outputs:
+
+  StackName:
+        Value:
+            !Ref AWS::StackName
   Instance:
     Value: !GetAtt [EC2Instance, PublicDnsName]
     Description: DNS Name of the newly created EC2 instance
+    Export:
+      Name:
+        "Fn::Sub":
+          - ${StackName}-PublicDnsNameID
+          - StackName: !Ref AWS::StackName
