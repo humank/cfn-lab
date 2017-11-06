@@ -9,7 +9,10 @@ The lab contains the following components to be design and deployed.
 * Security
 * Load-Balancer
 * RDS-MySql
-* ElasticBeanstalk for Web Application
+* EC2 Instance
+* EC2 with Spot Request
+* Parameter Store usage
+
 
 
 
