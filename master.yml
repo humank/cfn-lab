@@ -45,7 +45,7 @@ Resources:
                 StackName: !GetAtt ["VPC", "Outputs.StackName"]
                 Subnets: !GetAtt ["VPC","Outputs.PublicSubnets"]
                 EC2HostSecurityGroup: !GetAtt ["SecurityGroups","Outputs.EC2HostSecurityGroup"]
-                KeyName: kiminternallab
+                #KeyName: kiminternallab
                 InstanceType: m1.small
                 SSHLocation: 0.0.0.0/0
                 
