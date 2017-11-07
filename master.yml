@@ -45,14 +45,23 @@ Resources:
                 StackName: !GetAtt ["VPC", "Outputs.StackName"]
                 Subnets: !GetAtt ["VPC","Outputs.PublicSubnets"]
                 EC2HostSecurityGroup: !GetAtt ["SecurityGroups","Outputs.EC2HostSecurityGroup"]
-                #KeyName: kiminternallab
+                KeyName: labuserkey
                 InstanceType: m1.small
                 SSHLocation: 0.0.0.0/0
                 
-    #EC2-Spot:
-    #    Type: AWS::CloudFormation::Stack
-    #    Properties:
-    #        TemplateURL: https://s3.amazonaws.com/cnf-stackset-lab-20171116-dlink/ec2-spot.yml
+    SpotFleetEC2:
+       Type: AWS::CloudFormation::Stack
+       Properties:
+           TemplateURL: https://s3.amazonaws.com/cnf-stackset-lab-20171116-dlink/ec2-spot.yml
+           Parameters:
+                StackName: !GetAtt ["VPC", "Outputs.StackName"]
+                Subnets: !GetAtt ["VPC","Outputs.PublicSubnets"]
+                EC2HostSecurityGroup: !GetAtt ["SecurityGroups","Outputs.EC2HostSecurityGroup"]
+                KeyName: labuserkey
+                InstanceType: m3.medium
+                SSHLocation: 0.0.0.0/0
+                TargetCapacity: 2
+
 
     
     

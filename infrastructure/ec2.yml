@@ -1,12 +1,17 @@
 AWSTemplateFormatVersion: '2010-09-09'
 
 Description:
-  create ec2 instance for m3.medium
+  create ec2 instance for m1.small
 Parameters:
   StackName:
         Description: An environment name that will be prefixed to resource names
         Type: String
   
+  KeyName:
+    Description: Name of an existing EC2 KeyPair to enable SSH access to the web server
+    Type: AWS::EC2::KeyPair::KeyName
+    ConstraintDescription: must be the name of an existing EC2 KeyPair.
+
   Subnets:
     Description: WebServer EC2 instance locate in public subnet
     Type: List<AWS::EC2::Subnet::Id>
@@ -107,6 +112,7 @@ Resources:
   EC2Instance:
     Type: AWS::EC2::Instance
     Properties:
+      KeyName: !Ref 'KeyName'
       InstanceType: !Ref 'InstanceType'
       ImageId: !FindInMap [AWSRegionArch2AMI, !Ref 'AWS::Region', !FindInMap [AWSInstanceType2Arch,
           !Ref 'InstanceType', Arch]]
