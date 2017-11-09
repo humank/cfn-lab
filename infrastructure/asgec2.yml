@@ -21,6 +21,10 @@ Parameters:
     Description: WebServer EC2 instance locate in public subnet
     Type: List<AWS::EC2::Subnet::Id>
 
+  ALBTargetGroup:
+    Description: The Application Load Balancer TargetGroup to register with
+    Type: String
+
   ALBLoadBalancer:
     Description: AutoScaling group EC2 instances behind ALB
     Type: String
@@ -90,6 +94,7 @@ Resources:
       DesiredCapacity: 1
       LaunchConfigurationName: !Ref AppLaunchConfiguration
       #TargetGroupARNs: [!Ref ALBLoadBalancer]
+      TargetGroupARNs: [ !Ref ALBTargetGroup ]
       MaxSize: 2
       MinSize: 1
       VPCZoneIdentifier:
@@ -98,5 +103,4 @@ Resources:
     UpdatePolicy:
       AutoScalingRollingUpdate:
         MinInstancesInService: 1
-  
 

@@ -40,12 +40,12 @@ Resources:
             Protocol: HTTP 
             DefaultActions: 
                 - Type: forward
-                  TargetGroupArn: !Ref DefaultTargetGroup
+                  TargetGroupArn: !Ref ALBTargetGroup
 
-    DefaultTargetGroup:
+    ALBTargetGroup:
             Type: AWS::ElasticLoadBalancingV2::TargetGroup
             Properties:
-                Name: ALBDefaultTargetGroup
+                Name: ALBTargetGroup
                 VpcId: !Ref VPC
                 Port: 80
                 Protocol: HTTP
@@ -81,4 +81,13 @@ Outputs:
             Name: 
                 "Fn::Sub": 
                     - ${StackName}-LoadBalancerListener
+                    - StackName: !Ref AWS::StackName
+
+    ALBTargetGroup:
+        Description: A reference to ALB TargetGroup
+        Value: !Ref ALBTargetGroup
+        Export:
+            Name:
+                "Fn::Sub":
+                    - ${StackName}-ALBTargetGroup
                     - StackName: !Ref AWS::StackName
