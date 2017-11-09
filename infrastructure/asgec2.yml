@@ -1,6 +1,12 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Description:
   create ec2 spot request to runs on.
+
+Conditions:
+  SpotOnlyCond: !Not [ !Equals [ !Ref SpotPrice, 0 ] ]
+  EnableASGCond: !Equals [ !Ref AutoscalingGroupOrSpot, "AutoscalingGroup" ]
+  DisableASGCond: !Equals [ !Ref AutoscalingGroupOrSpot, "spotInstance" ]
+
 Parameters:
   StackName:
         Description: An environment name that will be prefixed to resource names
@@ -46,7 +52,53 @@ Parameters:
   ImageId:
     Type: String
     Default: ami-2803ac4e
-             
+
+  AutoscalingGroupOrSpot:
+    Type: String
+    Default: "AutoscalingGroup"
+    Description: "Provision autoscaling group instance with spot or not."
+    AllowedValues:
+      - "AutoscalingGroup"
+      - "spotInstance"
+
+  SpotPrice:
+    Type: Number
+    Description: spot price for spot instances
+    Default: 0.00
+
+Resources:
+  AppLaunchConfiguration:
+    Condition: EnableASGCond
+    Type: AWS::AutoScaling::LaunchConfiguration
+    Properties:
+      AssociatePublicIpAddress: true
+      ImageId: !Ref ImageId
+      InstanceType: !Ref InstanceType
+      SecurityGroups: !Ref EC2HostSecurityGroup
+      InstanceMonitoring: true
+      KeyName: !Ref KeyName
+      SpotPrice: 
+        !If 
+          - SpotOnlyCond
+          - !Ref SpotPrice
+          - !Ref AWS::NoValue
+      #IamInstanceProfile: !Ref EC2InstanceProfile
+
+  AppASG:
+    Type: AWS::AutoScaling::AutoScalingGroup
+    Properties:
+      DesiredCapacity: 1
+      LaunchConfigurationName: !Ref AppLaunchConfiguration
+      #TargetGroupARNs: [!Ref ALBLoadBalancer]
+      MaxSize: 2
+      MinSize: 1
+      VPCZoneIdentifier:
+        - !Select [ 0, !Ref Subnets ]
+        - !Select [ 1, !Ref Subnets ]
+    UpdatePolicy:
+      AutoScalingRollingUpdate:
+        MinInstancesInService: 1
+
   # Resources:          
   #   SpotFleet:
   #     Type: AWS::EC2::SpotFleet
@@ -66,36 +118,4 @@ Parameters:
   #         TerminateInstancesWithExpiration: 'true'
   #         #SpotPrice: 0.02
   
-Resources:
-  AppLaunchConfiguration:
-    Type: AWS::AutoScaling::LaunchConfiguration
-    Properties:
-      AssociatePublicIpAddress: true
-      ImageId: !Ref ImageId
-      InstanceType: !Ref InstanceType
-      SecurityGroups: !Ref EC2HostSecurityGroup
-    #DependsOn: VPCGatewayAttachment
-  AppASG:
-    Type: AWS::AutoScaling::AutoScalingGroup
-    Properties:
-      #AvailabilityZones: [!Select [ 0, !GetAZs ]]
-      # AvailabilityZones:
-      #   -
-      #     Fn::Select:
-      #       - 0 
-      #       - Fn::GetAZs: ""
-      #   -
-      #     Fn::Select:
-      #       - 1
-      #       - Fn::GetAZs: ""
-      DesiredCapacity: 1
-      LaunchConfigurationName: !Ref AppLaunchConfiguration
-      #TargetGroupARNs: [!Ref ALBLoadBalancer]
-      MaxSize: 2
-      MinSize: 1
-      VPCZoneIdentifier:
-        - !Select [ 0, !Ref Subnets ]
-        - !Select [ 1, !Ref Subnets ]
-    UpdatePolicy:
-      AutoScalingRollingUpdate:
-        MinInstancesInService: 1
+

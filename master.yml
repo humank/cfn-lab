@@ -69,6 +69,7 @@ Resources:
                 InstanceType: m3.medium
                 SSHLocation: 0.0.0.0/0
                 TargetCapacity: 2
+                SpotPrice: 0.02
     
     
     #Temporary to disable create database , the following config is fine.
