@@ -38,7 +38,40 @@ Resources:
                 Subnets: !GetAtt ["VPC","Outputs.PublicSubnets"]
                 SecurityGroup: !GetAtt ["SecurityGroups","Outputs.LoadBalancerSecurityGroup"]
 
-    #create ec2 info
+    ASGEC2:
+        Type: AWS::CloudFormation::Stack
+        Properties:
+            TemplateURL: https://s3.amazonaws.com/cnf-stackset-lab-20171116-dlink/asgec2.yml
+            Parameters:
+                StackName: !GetAtt ["VPC", "Outputs.StackName"]
+                Subnets: !GetAtt ["VPC","Outputs.PublicSubnets"]
+                #ALBLoadBalancer: !GetAtt ["ALB","Outputs.ALBLoadBalancer"]
+                ALBTargetGroup: !GetAtt ["ALB","Outputs.ALBTargetGroup"]
+                EC2HostSecurityGroup: !GetAtt ["SecurityGroups","Outputs.EC2HostSecurityGroup"]
+                KeyName: labuserkey
+                InstanceType: m3.medium
+                SSHLocation: 0.0.0.0/0
+                TargetCapacity: 2
+                SpotPrice: 0
+
+    RDS:
+        Type: AWS::CloudFormation::Stack
+        Properties:
+            TemplateURL: https://s3.amazonaws.com/cnf-stackset-lab-20171116-dlink/rds.yml
+            Parameters:
+
+                StackName: !GetAtt ["VPC", "Outputs.StackName"] 
+                DBSecurityGroup: !GetAtt ["SecurityGroups","Outputs.DbSecurityGroup"]
+                PrivateSubnet1: !GetAtt ["VPC", "Outputs.PrivateSubnet1"] 
+                PrivateSubnet2: !GetAtt ["VPC", "Outputs.PrivateSubnet2"] 
+                DatabaseUser: dlinkdemo
+                DatabasePassword: dlinkdemo
+                DatabaseName: dlinkdemo
+                DatabaseSize: 5
+                DatabaseEngine: mysql
+                DatabaseInstanceClass: db.m4.large
+
+#create ec2 info
     # 1. region 2. ami 3. tier 4. vpc 5. subnet 6. tag name 7. sg
     # with default tenancy, default shutdown behavior for stop, add instance-volume for default
 
@@ -55,39 +88,3 @@ Resources:
     #             KeyName: labuserkey
     #             InstanceType: m1.small
     #             SSHLocation: 0.0.0.0/0
-
-    ASGEC2:
-        Type: AWS::CloudFormation::Stack
-        Properties:
-            TemplateURL: https://s3.amazonaws.com/cnf-stackset-lab-20171116-dlink/asgec2.yml
-            Parameters:
-                StackName: !GetAtt ["VPC", "Outputs.StackName"]
-                Subnets: !GetAtt ["VPC","Outputs.PublicSubnets"]
-                #ALBLoadBalancer: !GetAtt ["ALB","Outputs.ALBLoadBalancer"]
-                ALBTargetGroup: !GetAtt ["ALB","Outputs.ALBTargetGroup"]
-                EC2HostSecurityGroup: !GetAtt ["SecurityGroups","Outputs.EC2HostSecurityGroup"]
-                KeyName: labuserkey
-                InstanceType: m3.medium
-                SSHLocation: 0.0.0.0/0
-                TargetCapacity: 2
-                SpotPrice: 0
-    
-    
-    #Temporary to disable create database , the following config is fine.
-    # RDS:
-    #     Type: AWS::CloudFormation::Stack
-    #     Properties:
-    #         TemplateURL: https://s3.amazonaws.com/cnf-stackset-lab-20171116-dlink/rds.yml
-    #         Parameters:
-
-    #             StackName: !GetAtt ["VPC", "Outputs.StackName"] 
-    #             DBSecurityGroup: !GetAtt ["SecurityGroups","Outputs.DbSecurityGroup"]
-    #             PrivateSubnet1: !GetAtt ["VPC", "Outputs.PrivateSubnet1"] 
-    #             PrivateSubnet2: !GetAtt ["VPC", "Outputs.PrivateSubnet2"] 
-    #             DatabaseUser: dlinkdemo
-    #             DatabasePassword: dlinkdemo
-    #             DatabaseName: dlinkdemo
-    #             DatabaseSize: 5
-    #             DatabaseEngine: mysql
-    #             DatabaseInstanceClass: db.m4.large
-
