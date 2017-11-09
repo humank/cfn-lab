@@ -74,6 +74,7 @@ Parameters:
       - db.r3.4xlarge
       - db.r3.8xlarge
       
+  KMSKey: "alias/aws/ssm"
 Resources:
 
 # segment for create parameter stores resource from the user input secured info

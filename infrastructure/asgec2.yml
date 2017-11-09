@@ -98,24 +98,5 @@ Resources:
     UpdatePolicy:
       AutoScalingRollingUpdate:
         MinInstancesInService: 1
-
-  # Resources:          
-  #   SpotFleet:
-  #     Type: AWS::EC2::SpotFleet
-  #     Properties:
-  #       SpotFleetRequestConfigData:
-  #         IamFleetRole: !GetAtt [IAMFleetRole, Arn]
-  #         LaunchSpecifications:
-  #           - ImageId: ami-8c1be5f6
-  #             InstanceType: !Ref InstanceType
-  #             KeyName: !Ref KeyName
-  #             Monitoring: 'true'
-  #             SecurityGroups: !Ref EC2HostSecurityGroup
-  #             SpotPrice: 0.02
-  #             SubnetId: !Select [ 0, !Ref Subnets ]
-  #         ReplaceUnhealthyInstances: 'true'
-  #         TargetCapacity: !Ref TargetCapacity
-  #         TerminateInstancesWithExpiration: 'true'
-  #         #SpotPrice: 0.02
   
 
