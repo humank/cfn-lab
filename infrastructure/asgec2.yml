@@ -25,9 +25,9 @@ Parameters:
     Description: The Application Load Balancer TargetGroup to register with
     Type: String
 
-  ALBLoadBalancer:
-    Description: AutoScaling group EC2 instances behind ALB
-    Type: String
+  # ALBLoadBalancer:
+  #   Description: AutoScaling group EC2 instances behind ALB
+  #   Type: String
 
   EC2HostSecurityGroup:
     Description: WebServer EC2 assigned with VPC Security Group
@@ -86,21 +86,32 @@ Resources:
           - SpotOnlyCond
           - !Ref SpotPrice
           - !Ref AWS::NoValue
+      UserData: 
+        "Fn::Base64": 
+              !Sub |
+                #!/bin/bash
+                sudo su
+                yum update -y
+                yum install httpd php -y
+                chkconfig httpd on
+                service httpd start
+                echo "<?php phpinfo(); ?>" > /var/www/html/index.php
+                #cd /var/www/html
+                #wget https://s3.eu-west-2.amazonaws.com/acloudguru-example/connect.php
       #IamInstanceProfile: !Ref EC2InstanceProfile
 
   AppASG:
     Type: AWS::AutoScaling::AutoScalingGroup
     Properties:
-      DesiredCapacity: 1
+      DesiredCapacity: 2
       LaunchConfigurationName: !Ref AppLaunchConfiguration
       #TargetGroupARNs: [!Ref ALBLoadBalancer]
       TargetGroupARNs: [ !Ref ALBTargetGroup ]
-      MaxSize: 2
-      MinSize: 1
+      MaxSize: 6
+      MinSize: 2
       VPCZoneIdentifier:
         - !Select [ 0, !Ref Subnets ]
         - !Select [ 1, !Ref Subnets ]
     UpdatePolicy:
       AutoScalingRollingUpdate:
-        MinInstancesInService: 1
-
+        MinInstancesInService: 2

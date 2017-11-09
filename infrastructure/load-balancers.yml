@@ -49,6 +49,9 @@ Resources:
                 VpcId: !Ref VPC
                 Port: 80
                 Protocol: HTTP
+                HealthCheckPort: 80
+                HealthCheckProtocol: HTTP
+                HealthCheckPath: /index.php
            
 Outputs:
 
