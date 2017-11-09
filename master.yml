@@ -1,5 +1,10 @@
 Description: >
-    Kim's Lab demo.
+    Kim's Lab demo. 
+    The hands-on lab include the following components template design - 
+        vpc, security-groups, load-balancers, ec2 & auto-scaling , rds .
+
+        auto-scaling group 希望同時含 on-daemon 及 spot.
+        Load Balancer 如果可以就直接用 ALB.
 Resources:
 
     VPC:
@@ -37,32 +42,33 @@ Resources:
     # 1. region 2. ami 3. tier 4. vpc 5. subnet 6. tag name 7. sg
     # with default tenancy, default shutdown behavior for stop, add instance-volume for default
 
-    EC2:
+
+    # Temporary disable first
+    # EC2:
+    #     Type: AWS::CloudFormation::Stack
+    #     Properties:
+    #         TemplateURL: https://s3.amazonaws.com/cnf-stackset-lab-20171116-dlink/ec2.yml
+    #         Parameters:
+    #             StackName: !GetAtt ["VPC", "Outputs.StackName"]
+    #             Subnets: !GetAtt ["VPC","Outputs.PublicSubnets"]
+    #             EC2HostSecurityGroup: !GetAtt ["SecurityGroups","Outputs.EC2HostSecurityGroup"]
+    #             KeyName: labuserkey
+    #             InstanceType: m1.small
+    #             SSHLocation: 0.0.0.0/0
+
+    ASGEC2:
         Type: AWS::CloudFormation::Stack
         Properties:
-            TemplateURL: https://s3.amazonaws.com/cnf-stackset-lab-20171116-dlink/ec2.yml
+            TemplateURL: https://s3.amazonaws.com/cnf-stackset-lab-20171116-dlink/asgec2.yml
             Parameters:
                 StackName: !GetAtt ["VPC", "Outputs.StackName"]
                 Subnets: !GetAtt ["VPC","Outputs.PublicSubnets"]
-                EC2HostSecurityGroup: !GetAtt ["SecurityGroups","Outputs.EC2HostSecurityGroup"]
-                KeyName: labuserkey
-                InstanceType: m1.small
-                SSHLocation: 0.0.0.0/0
-                
-    SpotFleetEC2:
-       Type: AWS::CloudFormation::Stack
-       Properties:
-           TemplateURL: https://s3.amazonaws.com/cnf-stackset-lab-20171116-dlink/ec2-spot.yml
-           Parameters:
-                StackName: !GetAtt ["VPC", "Outputs.StackName"]
-                Subnets: !GetAtt ["VPC","Outputs.PublicSubnets"]
+                ALBLoadBalancer: !GetAtt ["ALB","Outputs.ALBLoadBalancer"]
                 EC2HostSecurityGroup: !GetAtt ["SecurityGroups","Outputs.EC2HostSecurityGroup"]
                 KeyName: labuserkey
                 InstanceType: m3.medium
                 SSHLocation: 0.0.0.0/0
                 TargetCapacity: 2
-
-
     
     
     #Temporary to disable create database , the following config is fine.

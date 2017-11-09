@@ -56,13 +56,13 @@ Outputs:
         Value:
             !Ref AWS::StackName
 
-    LoadBalancer:
+    ALBLoadBalancer:
         Description: A reference to the Application Load Balancer
         Value: !Ref LoadBalancer
         Export:
             Name: 
                 "Fn::Sub": 
-                    - ${StackName}-LoadBalancer
+                    - ${StackName}-ALBLoadBalancer
                     - StackName: !Ref AWS::StackName
 
     LoadBalancerUrl:
@@ -82,5 +82,3 @@ Outputs:
                 "Fn::Sub": 
                     - ${StackName}-LoadBalancerListener
                     - StackName: !Ref AWS::StackName
-
-    
