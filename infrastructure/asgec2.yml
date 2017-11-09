@@ -75,7 +75,7 @@ Resources:
     Condition: EnableASGCond
     Type: AWS::AutoScaling::LaunchConfiguration
     Properties:
-      AssociatePublicIpAddress: true
+      AssociatePublicIpAddress: false
       ImageId: !Ref ImageId
       InstanceType: !Ref InstanceType
       SecurityGroups: !Ref EC2HostSecurityGroup
@@ -95,7 +95,7 @@ Resources:
                 yum install httpd php -y
                 chkconfig httpd on
                 service httpd start
-                echo "<?php phpinfo(); ?>" > /var/www/html/index.php
+                echo "<?php $_SERVER['SERVER_ADDR'] ?>" > /var/www/html/index.php
                 #cd /var/www/html
                 #wget https://s3.eu-west-2.amazonaws.com/acloudguru-example/connect.php
       #IamInstanceProfile: !Ref EC2InstanceProfile
