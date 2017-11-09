@@ -73,8 +73,7 @@ Parameters:
       - db.r3.2xlarge
       - db.r3.4xlarge
       - db.r3.8xlarge
-      
-  KMSKey: "alias/aws/ssm"
+
 Resources:
 
 # segment for create parameter stores resource from the user input secured info
@@ -82,28 +81,28 @@ Resources:
     Type: "AWS::SSM::Parameter"
     Properties:
       #Naming convention : /environment/region/business app/component/parameter
-      Name: "/Prod/US-east-1/SimpleWeb/Database/DatabaseUser"
+      Name: "/Prod/Tokyo/SimpleWeb/Database/DatabaseUser"
       Type: "String"
       Value: !Ref DatabaseUser
-      Description: "DatabaseUser for SimpleWeb application runs on US-east-1 production env."
+      Description: "DatabaseUser for SimpleWeb application runs on Tokyo production env."
 
   PSDatabasePassword:
       Type: "AWS::SSM::Parameter"
       Properties:
         #Naming convention : /environment/region/business app/component/parameter
-        Name: "/Prod/US-east-1/SimpleWeb/Database/DatabasePassword"
+        Name: "/Prod/Tokyo/SimpleWeb/Database/DatabasePassword"
         Type: "String"
         Value: !Ref DatabasePassword
-        Description: "DatabasePassword for SimpleWeb application runs on US-east-1 production env."      
+        Description: "DatabasePassword for SimpleWeb application runs on Tokyo production env."      
 
   PSDatabaseName:
       Type: "AWS::SSM::Parameter"
       Properties:
         #Naming convention : /environment/region/business app/component/parameter
-        Name: "/Prod/US-east-1/SimpleWeb/Database/DatabaseName"
+        Name: "/Prod/Tokyo/SimpleWeb/Database/DatabaseName"
         Type: "String"
         Value: !Ref DatabaseName
-        Description: "DatabaseName for SimpleWeb application runs on US-east-1 production env."      
+        Description: "DatabaseName for SimpleWeb application runs on Tokyo production env."      
 
 
 # segment for Database
