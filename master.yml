@@ -26,6 +26,8 @@ Resources:
             Parameters: 
                 StackName: !GetAtt ["VPC", "Outputs.StackName"] 
                 VPC: !GetAtt ["VPC","Outputs.VpcId"]
+                PublicSubnet1CIDR:  10.180.8.0/24
+                PublicSubnet2CIDR:  10.180.16.0/24
 
 
     ALB:
@@ -61,7 +63,7 @@ Resources:
             Parameters:
 
                 StackName: !GetAtt ["VPC", "Outputs.StackName"] 
-                DBSecurityGroup: !GetAtt ["SecurityGroups","Outputs.DbSecurityGroup"]
+                DbSecurityGroup: !GetAtt ["SecurityGroups","Outputs.DbSecurityGroup"]
                 PrivateSubnet1: !GetAtt ["VPC", "Outputs.PrivateSubnet1"] 
                 PrivateSubnet2: !GetAtt ["VPC", "Outputs.PrivateSubnet2"] 
                 DatabaseUser: dlinkdemo
@@ -69,7 +71,7 @@ Resources:
                 DatabaseName: dlinkdemo
                 DatabaseSize: 5
                 DatabaseEngine: mysql
-                DatabaseInstanceClass: db.m4.large
+                DatabaseInstanceClass: db.t2.micro
 
 #create ec2 info
     # 1. region 2. ami 3. tier 4. vpc 5. subnet 6. tag name 7. sg

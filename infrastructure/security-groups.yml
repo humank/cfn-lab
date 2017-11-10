@@ -10,6 +10,16 @@ Parameters:
     VPC:
         Type: AWS::EC2::VPC::Id
         Description: Choose which VPC the security groups should be deployed to
+    
+    PublicSubnet1CIDR:
+        Description: Please enter the IP range (CIDR notation) for the public subnet in the first Availability Zone
+        Type: String
+        Default: 10.180.8.0/24
+
+    PublicSubnet2CIDR:
+        Description: Please enter the IP range (CIDR notation) for the public subnet in the second Availability Zone
+        Type: String
+        Default: 10.180.16.0/24
 
 Resources:
 
@@ -50,14 +60,24 @@ Resources:
         Properties:
             GroupDescription: Enable access to the RDS DB
             VpcId: !Ref VPC
-            SecurityGroupEgress:
+            SecurityGroupIngress:
             - 
-                CidrIp: 0.0.0.0/0
+                CidrIp: !Ref PublicSubnet1CIDR
                 IpProtocol: tcp
                 ToPort: 3306
                 FromPort: 3306
             - 
-                CidrIp: 0.0.0.0/0
+                CidrIp: !Ref PublicSubnet1CIDR
+                IpProtocol: tcp
+                ToPort: 5432
+                FromPort: 5432
+            - 
+                CidrIp: !Ref PublicSubnet2CIDR
+                IpProtocol: tcp
+                ToPort: 3306
+                FromPort: 3306
+            - 
+                CidrIp: !Ref PublicSubnet2CIDR
                 IpProtocol: tcp
                 ToPort: 5432
                 FromPort: 5432

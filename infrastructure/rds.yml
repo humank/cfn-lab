@@ -9,7 +9,7 @@ Parameters:
     Description: Name of an active CloudFormation stack that contains networking resources.
     Type: String
 
-  DBSecurityGroup:
+  DbSecurityGroup:
     Description: Name of a existed DBSecurityGroup to apply.
     Type: String
 
@@ -127,6 +127,7 @@ Resources:
       AllocatedStorage: !Ref DatabaseSize
       StorageType: gp2
       MultiAZ: 'true'
+      VPCSecurityGroups: [ !Ref DbSecurityGroup ]
 
 Outputs:
 
