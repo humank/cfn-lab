@@ -86,8 +86,8 @@ Resources:
         "Fn::Base64": 
               !Sub |
                 #!/bin/bash
-                aws configure set aws_access_key_id AKIAJR2ARVHRC4IRWTAQ >> /tmp/userdata.log 2>&1
-                aws configure set aws_secret_access_key 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 >> /tmp/userdata.log 2>&1
+                aws configure set aws_access_key_id AKIAJJZ47VMZOWLVIN4A >> /tmp/userdata.log 2>&1
+                aws configure set aws_secret_access_key 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 >> /tmp/userdata.log 2>&1
                 aws configure set default.region ap-northeast-1 >> /tmp/userdata.log 2>&1
                 yum update -y >> /tmp/userdata.log 2>&1
                 yum remove httpd* php* -y >> /tmp/userdata.log 2>&1
