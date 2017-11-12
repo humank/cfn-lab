@@ -34,6 +34,9 @@ Resources:
             SecurityGroupIngress:
                 # Only allow inbound access to EC2 from the ELB
                 - SourceSecurityGroupId: !Ref LoadBalancerSecurityGroup 
+                # Just open this for debug
+                  IpProtocol: -1 
+                - CidrIp: 0.0.0.0/0
                   IpProtocol: -1
             Tags: 
                 - Key: Name

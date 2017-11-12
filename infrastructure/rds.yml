@@ -75,36 +75,6 @@ Parameters:
       - db.r3.8xlarge
 
 Resources:
-
-# segment for create parameter stores resource from the user input secured info
-  PSDatabaseUser:
-    Type: "AWS::SSM::Parameter"
-    Properties:
-      #Naming convention : /environment/region/business app/component/parameter
-      Name: "/Prod/Tokyo/SimpleWeb/Database/DatabaseUser"
-      Type: "String"
-      Value: !Ref DatabaseUser
-      Description: "DatabaseUser for SimpleWeb application runs on Tokyo production env."
-
-  PSDatabasePassword:
-      Type: "AWS::SSM::Parameter"
-      Properties:
-        #Naming convention : /environment/region/business app/component/parameter
-        Name: "/Prod/Tokyo/SimpleWeb/Database/DatabasePassword"
-        Type: "String"
-        Value: !Ref DatabasePassword
-        Description: "DatabasePassword for SimpleWeb application runs on Tokyo production env."      
-
-  PSDatabaseName:
-      Type: "AWS::SSM::Parameter"
-      Properties:
-        #Naming convention : /environment/region/business app/component/parameter
-        Name: "/Prod/Tokyo/SimpleWeb/Database/DatabaseName"
-        Type: "String"
-        Value: !Ref DatabaseName
-        Description: "DatabaseName for SimpleWeb application runs on Tokyo production env."      
-
-
 # segment for Database
 
   DbSubnetGroup:
@@ -128,6 +98,43 @@ Resources:
       StorageType: gp2
       MultiAZ: 'true'
       VPCSecurityGroups: [ !Ref DbSecurityGroup ]
+
+  # segment for create parameter stores resource from the user input secured info
+  PSDatabaseUser:
+    Type: "AWS::SSM::Parameter"
+    Properties:
+      #Naming convention : /environment/region/business app/component/parameter
+      Name: "/Prod/Tokyo/SimpleWeb/DatabaseUser"
+      Type: "String"
+      Value: !Ref DatabaseUser
+      Description: "DatabaseUser for SimpleWeb application runs on Tokyo production env."
+
+  PSDatabasePassword:
+    Type: "AWS::SSM::Parameter"
+    Properties:
+      #Naming convention : /environment/region/business app/component/parameter
+      Name: "/Prod/Tokyo/SimpleWeb/DatabasePassword"
+      Type: "String"
+      Value: !Ref DatabasePassword
+      Description: "DatabasePassword for SimpleWeb application runs on Tokyo production env."      
+
+  PSDatabaseName:
+    Type: "AWS::SSM::Parameter"
+    Properties:
+      #Naming convention : /environment/region/business app/component/parameter
+      Name: "/Prod/Tokyo/SimpleWeb/DatabaseName"
+      Type: "String"
+      Value: !Ref DatabaseName
+      Description: "DatabaseName for SimpleWeb application runs on Tokyo production env." 
+
+  PSDatabaseUrl:
+    Type: "AWS::SSM::Parameter"
+    Properties:
+      #Naming convention : /environment/region/business app/component/parameter
+      Name: "/Prod/Tokyo/SimpleWeb/DatabaseURL"
+      Type: "String"
+      Value: !GetAtt Database.Endpoint.Address
+      Description: "DatabaseUrl for SimpleWeb application runs on Tokyo production env." 
 
 Outputs:
 

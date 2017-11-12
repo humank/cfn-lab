@@ -25,10 +25,6 @@ Parameters:
     Description: The Application Load Balancer TargetGroup to register with
     Type: String
 
-  # ALBLoadBalancer:
-  #   Description: AutoScaling group EC2 instances behind ALB
-  #   Type: String
-
   EC2HostSecurityGroup:
     Description: WebServer EC2 assigned with VPC Security Group
     Type: List<AWS::EC2::SecurityGroup::Id>
@@ -75,7 +71,7 @@ Resources:
     Condition: EnableASGCond
     Type: AWS::AutoScaling::LaunchConfiguration
     Properties:
-      AssociatePublicIpAddress: false
+      AssociatePublicIpAddress: true
       ImageId: !Ref ImageId
       InstanceType: !Ref InstanceType
       SecurityGroups: !Ref EC2HostSecurityGroup
@@ -90,15 +86,20 @@ Resources:
         "Fn::Base64": 
               !Sub |
                 #!/bin/bash
-                sudo su
-                yum update -y
-                yum install httpd php -y
-                chkconfig httpd on
-                service httpd start
-                echo "<?php $_SERVER['SERVER_ADDR'] ?>" > /var/www/html/index.php
-                #cd /var/www/html
-                #wget https://s3.eu-west-2.amazonaws.com/acloudguru-example/connect.php
-      #IamInstanceProfile: !Ref EC2InstanceProfile
+                aws configure set aws_access_key_id AKIAJR2ARVHRC4IRWTAQ >> /tmp/userdata.log 2>&1
+                aws configure set aws_secret_access_key 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 >> /tmp/userdata.log 2>&1
+                aws configure set default.region ap-northeast-1 >> /tmp/userdata.log 2>&1
+                yum update -y >> /tmp/userdata.log 2>&1
+                yum remove httpd* php* -y >> /tmp/userdata.log 2>&1
+                yum install httpd24* -y >> /tmp/userdata.log 2>&1
+                yum install php70* -y >> /tmp/userdata.log 2>&1
+                chkconfig httpd on >> /tmp/userdata.log 2>&1
+                service httpd start >> /tmp/userdata.log 2>&1
+                cd /var/www/html >> /tmp/userdata.log 2>&1
+                export COMPOSER_HOME=~/.composer >> /tmp/userdata.log 2>&1
+                curl -sS https://getcomposer.org/installer | php >> /tmp/userdata.log 2>&1
+                php composer.phar require aws/aws-sdk-php >> /tmp/userdata.log 2>&1
+                curl -o index.php https://s3.us-east-2.amazonaws.com/cnf-stackset-lab-20171116-dlink/index.php  >> /tmp/userdata.log 2>&1
 
   AppASG:
     Type: AWS::AutoScaling::AutoScalingGroup

@@ -47,7 +47,6 @@ Resources:
             Parameters:
                 StackName: !GetAtt ["VPC", "Outputs.StackName"]
                 Subnets: !GetAtt ["VPC","Outputs.PublicSubnets"]
-                #ALBLoadBalancer: !GetAtt ["ALB","Outputs.ALBLoadBalancer"]
                 ALBTargetGroup: !GetAtt ["ALB","Outputs.ALBTargetGroup"]
                 EC2HostSecurityGroup: !GetAtt ["SecurityGroups","Outputs.EC2HostSecurityGroup"]
                 KeyName: labuserkey
@@ -61,7 +60,6 @@ Resources:
         Properties:
             TemplateURL: https://s3.amazonaws.com/cnf-stackset-lab-20171116-dlink/rds.yml
             Parameters:
-
                 StackName: !GetAtt ["VPC", "Outputs.StackName"] 
                 DbSecurityGroup: !GetAtt ["SecurityGroups","Outputs.DbSecurityGroup"]
                 PrivateSubnet1: !GetAtt ["VPC", "Outputs.PrivateSubnet1"] 
@@ -78,7 +76,7 @@ Resources:
     # with default tenancy, default shutdown behavior for stop, add instance-volume for default
 
 
-    # Temporary disable first
+    #For Bastation usage
     # EC2:
     #     Type: AWS::CloudFormation::Stack
     #     Properties:
@@ -88,5 +86,5 @@ Resources:
     #             Subnets: !GetAtt ["VPC","Outputs.PublicSubnets"]
     #             EC2HostSecurityGroup: !GetAtt ["SecurityGroups","Outputs.EC2HostSecurityGroup"]
     #             KeyName: labuserkey
-    #             InstanceType: m1.small
+    #             InstanceType: t2.micro
     #             SSHLocation: 0.0.0.0/0
