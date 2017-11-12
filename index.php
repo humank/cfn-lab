@@ -1,6 +1,7 @@
 <?php
 require 'vendor/autoload.php';
 use Aws\Ssm\SsmClient;
+use Aws\Ec2\Ec2Client;
 $ssm = new Aws\Ssm\SsmClient([
         'region' => 'ap-northeast-1',
         'version' => '2014-11-06'
@@ -13,6 +14,7 @@ $dbusername ='';
 $password = '';
 $hostname ='';
 $dbname ='';
+$serverip = $_SERVER['SERVER_ADDR'];
 foreach ($arrParams as $param) {
         if('/Prod/Tokyo/SimpleWeb/DatabaseURL'===$param['Name']){
                 $hostname = $param['Value'];
@@ -29,6 +31,7 @@ foreach ($arrParams as $param) {
 }
 
 echo "<H1>Hello, you are visting the test page for test.</H1>";
+echo "<H2> $serverip </H2>"; 
 $conn = mysqli_connect($hostname, $dbusername, $password,$dbname,'3306') or die("Unable to connect to MySQL");
 if(mysqli_connect_errno()){
     echo "Failed to connect to RDS-mysql " . mysqli_connect_error();
