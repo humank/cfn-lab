@@ -27,16 +27,58 @@ Cloudfomration components design just like playing lego. If you want to construc
 
 ## Step 0 Prepare development environment
 
-Recommend to use VS Core or Atom IDE to design CFN, leverage useful plugin would help you to design it effectively.
+Recommend to use Visual Studio Code or Atom IDE to design CFN, leverage useful plugin would help you to design it effectively.
 
-### VSCore
+### To adopt JSON or YAML in Cloudformation ?
 
-    [Official Web Site](https://code.visualstudio.com/)
+Generally speaking, depends on your team. There are some criterias to help you make decision.
 
+* Do you need comments in template ?
+* Do you need to train or facilitate guys to get familiar with cfn?
+
+In case of which 1 you need, recommend to use YAML.
+
+Of course, you can also transfer the different format in 1 second, check this -> 
+[Tool for converting AWS CloudFormation templates between JSON and YAML formats](https://github.com/awslabs/aws-cfn-template-flip)
+
+### Visual Studio Code
+
+[Visual Studio Code official Web Site ](https://code.visualstudio.com/)
+
+[VS Code plugin for Cloudformation - JSON](https://marketplace.visualstudio.com/items?itemName=aws-scripting-guy.cform)
+
+[VS Code plugin for Cloudfromation - YAML](https://marketplace.visualstudio.com/items?itemName=DanielThielking.aws-cloudformation-yaml)
 
 ### Atom
 
+[Atom Official Web Site](https://atom.io/)
+
+[Atom atom-cform-yaml package](https://atom.io/packages/atom-cform-yaml)
+
+[Atom atom-cform package](https://atom.io/packages/atom-cform)
+
+### Make Lab ready
+1. Clone lab project
+
+> git clone https://github.com/humank/20171116-cfn-lab.git
+
+2. Create S3 Bucket to store Cloudformation Template for later usage.
+
+> Recommend to practice this lab at Region Tokyo to have good user experience, create a s3 Bucket at Region Tokyo is good but not must .--> 需要補圖做說明
+
+3. Generate or keep the IAM User Accesskey csv file, will leverage the Accesskey and AccessSecurityKey to SSH into EC2 instance for check status. 
+--> 需要補圖做說明
+
 ## Step 1 Create VPC template
+
+<img src="images/Step1-VPC.png">
+Change directory to LAB_PROJECT_FOLDER/setp1.
+Contains two files :
+
+1. master.yml
+2. vpc.yml
+
+
 
 ## Step 2 Create Security Groups template
 
@@ -46,12 +88,13 @@ Recommend to use VS Core or Atom IDE to design CFN, leverage useful plugin would
 
 ## Step 5 Create RDS-MySql template
 
-The training material is reference from awslab [startup-kit-templates](https://github.com/awslabs/startup-kit-templates) and [ecs-refarch-cloudformation](https://github.com/awslabs/ecs-refarch-cloudformation).
 
 
 # References
 
 # Useful Cloudformation Template tools recommendation
+
+The training material is reference from awslab [startup-kit-templates](https://github.com/awslabs/startup-kit-templates) and [ecs-refarch-cloudformation](https://github.com/awslabs/ecs-refarch-cloudformation).
 
 
 

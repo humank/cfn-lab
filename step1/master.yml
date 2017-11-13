@@ -1,0 +1,14 @@
+Description: >
+    Create VPC only.
+Resources:
+    VPC:
+        Type: AWS::CloudFormation::Stack
+        Properties:
+            TemplateURL: https://s3.us-east-2.amazonaws.com/cnf-stackset-lab-20171116-dlink/vpc.yml
+            Parameters:
+                StackName:    !Ref AWS::StackName                
+                VpcCIDR:            10.180.0.0/16
+                PublicSubnet1CIDR:  10.180.8.0/24
+                PublicSubnet2CIDR:  10.180.16.0/24
+                PrivateSubnet1CIDR: 10.180.24.0/24
+                PrivateSubnet2CIDR: 10.180.32.0/24
