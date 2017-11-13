@@ -94,17 +94,17 @@ Resources:
         "Fn::Base64": 
               !Sub |
                 #!/bin/bash
-                yum update -y >> /tmp/userdata.log 2>&1
-                yum remove httpd* php* -y >> /tmp/userdata.log 2>&1
-                yum install httpd24* -y >> /tmp/userdata.log 2>&1
-                yum install php70* -y >> /tmp/userdata.log 2>&1
-                chkconfig httpd on >> /tmp/userdata.log 2>&1
-                service httpd start >> /tmp/userdata.log 2>&1
-                cd /var/www/html >> /tmp/userdata.log 2>&1
-                export COMPOSER_HOME=~/.composer >> /tmp/userdata.log 2>&1
-                curl -sS https://getcomposer.org/installer | php >> /tmp/userdata.log 2>&1
-                php composer.phar require aws/aws-sdk-php >> /tmp/userdata.log 2>&1
-                curl -o index.php https://s3.us-east-2.amazonaws.com/cnf-stackset-lab-20171116-dlink/index.php  >> /tmp/userdata.log 2>&1
+                yum update -y
+                yum remove httpd* php* -y
+                yum install httpd24* -y
+                yum install php70* -y
+                chkconfig httpd on
+                service httpd start
+                cd /var/www/html
+                export COMPOSER_HOME=~/.composer
+                curl -sS https://getcomposer.org/installer | php
+                php composer.phar require aws/aws-sdk-php
+                curl -o index.php https://s3.us-east-2.amazonaws.com/cnf-stackset-lab-20171116-dlink/index.php 
 
   AppASG:
     Type: AWS::AutoScaling::AutoScalingGroup
