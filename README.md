@@ -73,8 +73,6 @@ Of course, you can also transfer the different format in 1 second, check this ->
 
 click the button to launch the demo stack in *Tokyo*
 
-**Safari is not supported ! Use Chrome instead of it.**
-
 [![cloudformation-launch-stack](https://s3.amazonaws.com/cloudformation-examples/cloudformation-launch-stack.png)](https://console.aws.amazon.com/cloudformation/home?region=ap-northeast-1#/stacks/new?stackName=nov-15-go&templateURL=https://s3.us-east-2.amazonaws.com/cnf-stackset-lab-20171116-dlink/master.yml)
 
 check the cloudformation output and click the ***LoadBalancerURL*** link to see the result.
