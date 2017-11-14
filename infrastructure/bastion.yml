@@ -41,33 +41,45 @@ Parameters:
 
       
 Resources:
-  BastionHostEC2Instance:
-    Type: AWS::EC2::Instance
+  BastionLaunchConfiguration:
+    Type: AWS::AutoScaling::LaunchConfiguration
     Properties:
-      KeyName: !Ref KeyName
-      InstanceType: !Ref BastionInstanceType
+      AssociatePublicIpAddress: true
       ImageId: !Ref BastionImageId
-      AvailabilityZone: !Select [ 0, !GetAZs ]
-      SubnetId: !Select [ 0, !Ref Subnets ]
-      SecurityGroupIds: [!Ref BastionHostSecurityGroup]
+      InstanceType: !Ref BastionInstanceType
+      SecurityGroups: !Ref BastionHostSecurityGroup
+      InstanceMonitoring: true
+      KeyName: !Ref KeyName
+
+  BastionASG:
+    Type: AWS::AutoScaling::AutoScalingGroup
+    Properties:
+      DesiredCapacity: 1
+      LaunchConfigurationName: !Ref BastionLaunchConfiguration
+      #TargetGroupARNs: [ !Ref ALBTargetGroup ]
       Tags:
-        -
-          Key: "Name"
-          Value: "bastionhost"
-      BlockDeviceMappings:
-      - DeviceName: /dev/sdc
-        VirtualName: ephemeral0
+        - Key: Name
+          Value: BastionHost
+          PropagateAtLaunch: true
+      MaxSize: 1
+      MinSize: 1
+      VPCZoneIdentifier:
+        - !Select [ 0, !Ref Subnets ]
+        - !Select [ 1, !Ref Subnets ]
+    UpdatePolicy:
+      AutoScalingRollingUpdate:
+        MinInstancesInService: 1
+
   
-  
-Outputs:
-  StackName:
-        Value:
-            !Ref AWS::StackName
-  Instance:
-    Value: !Ref BastionHostEC2Instance
-    Description: DNS Name of the newly created EC2 instance
-    Export:
-      Name:
-        "Fn::Sub":
-          - ${StackName}-PublicDnsNameID
-          - StackName: !Ref AWS::StackName
+# Outputs:
+#   StackName:
+#         Value:
+#             !Ref AWS::StackName
+#   BastionHost:
+#     Value: !Ref BastionHostEC2Instance
+#     Description: DNS Name of the newly created EC2 instance
+#     Export:
+#       Name:
+#         "Fn::Sub":
+#           - ${StackName}-PublicDnsNameID
+#           - StackName: !Ref AWS::StackName

@@ -146,7 +146,7 @@ Resources:
                 EC2HostSecurityGroup: !GetAtt ["SecurityGroups","Outputs.EC2HostSecurityGroup"]
                 KeyName: !Ref KeyName
                 AsgInstanceType: !Ref AsgInstanceType
-                TargetCapacity: !Ref AsgTargetCapacity
+                AsgTargetCapacity: !Ref AsgTargetCapacity
                 SpotPrice: !Ref SpotPrice
 
     # RDSMYSQL:
@@ -179,14 +179,14 @@ Resources:
                 DatabaseName: !Ref DatabaseName
                 DatabaseInstanceType: !Ref DatabaseInstanceType
 
-    # BASTION:
-    #     Type: AWS::CloudFormation::Stack
-    #     Properties:
-    #         TemplateURL: https://s3.amazonaws.com/cnf-stackset-lab-20171116-dlink/bastion.yml
-    #         Parameters:
-    #             StackName: !GetAtt ["VPC", "Outputs.StackName"]
-    #             Subnets: !GetAtt ["VPC","Outputs.PublicSubnets"]
-    #             BastionHostSecurityGroup: !GetAtt ["SecurityGroups","Outputs.BastionHostSecurityGroup"]
-    #             KeyName: !Ref KeyName
-    #             BastionInstanceType: !Ref BastionInstanceType
-    #             BastionSSHLocation: !Ref BastionSSHLocation
+    BASTION:
+        Type: AWS::CloudFormation::Stack
+        Properties:
+            TemplateURL: https://s3.amazonaws.com/cnf-stackset-lab-20171116-dlink/bastion.yml
+            Parameters:
+                StackName: !GetAtt ["VPC", "Outputs.StackName"]
+                Subnets: !GetAtt ["VPC","Outputs.PublicSubnets"]
+                BastionHostSecurityGroup: !GetAtt ["SecurityGroups","Outputs.BastionHostSecurityGroup"]
+                KeyName: !Ref KeyName
+                BastionInstanceType: !Ref BastionInstanceType
+                BastionSSHLocation: !Ref BastionSSHLocation

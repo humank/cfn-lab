@@ -98,30 +98,6 @@ Resources:
                 - Key: Name 
                   Value: !Sub ${StackName} Private Subnet (AZ2)
 
-    NatGateway1EIP:
-        Type: AWS::EC2::EIP
-        DependsOn: InternetGatewayAttachment
-        Properties: 
-            Domain: vpc
-
-    NatGateway2EIP:
-        Type: AWS::EC2::EIP
-        DependsOn: InternetGatewayAttachment
-        Properties:
-            Domain: vpc
-
-    NatGateway1: 
-        Type: AWS::EC2::NatGateway
-        Properties: 
-            AllocationId: !GetAtt NatGateway1EIP.AllocationId
-            SubnetId: !Ref PublicSubnet1
-
-    NatGateway2: 
-        Type: AWS::EC2::NatGateway
-        Properties:
-            AllocationId: !GetAtt NatGateway2EIP.AllocationId
-            SubnetId: !Ref PublicSubnet2
-
     PublicRouteTable:
         Type: AWS::EC2::RouteTable
         Properties: 
@@ -150,48 +126,77 @@ Resources:
             RouteTableId: !Ref PublicRouteTable
             SubnetId: !Ref PublicSubnet2
     
+    # PrivateRouteTable1:
+    #     Type: AWS::EC2::RouteTable
+    #     Properties: 
+    #         VpcId: !Ref VPC
+    #         Tags: 
+    #             - Key: Name 
+    #               Value: !Sub ${StackName} Private Routes (AZ1)
 
-    PrivateRouteTable1:
-        Type: AWS::EC2::RouteTable
-        Properties: 
-            VpcId: !Ref VPC
-            Tags: 
-                - Key: Name 
-                  Value: !Sub ${StackName} Private Routes (AZ1)
+    # PrivateSubnet1RouteTableAssociation:
+    #     Type: AWS::EC2::SubnetRouteTableAssociation
+    #     Properties:
+    #         RouteTableId: !Ref PrivateRouteTable1
+    #         SubnetId: !Ref PrivateSubnet1
 
-    DefaultPrivateRoute1:
-        Type: AWS::EC2::Route
-        Properties:
-            RouteTableId: !Ref PrivateRouteTable1
-            DestinationCidrBlock: 0.0.0.0/0
-            NatGatewayId: !Ref NatGateway1
+    # DefaultPrivateRoute1:
+    #     Type: AWS::EC2::Route
+    #     Properties:
+    #         RouteTableId: !Ref PrivateRouteTable1
+    #         DestinationCidrBlock: 0.0.0.0/0
+    #         GatewayId: local
+    #         #NatGatewayId: !Ref NatGateway1
+    
+    # PrivateRouteTable2:
+    #     Type: AWS::EC2::RouteTable
+    #     Properties: 
+    #         VpcId: !Ref VPC
+    #         Tags: 
+    #             - Key: Name 
+    #               Value: !Sub ${StackName} Private Routes (AZ2)
 
-    PrivateSubnet1RouteTableAssociation:
-        Type: AWS::EC2::SubnetRouteTableAssociation
-        Properties:
-            RouteTableId: !Ref PrivateRouteTable1
-            SubnetId: !Ref PrivateSubnet1
+    # DefaultPrivateRoute2:
+    #     Type: AWS::EC2::Route
+    #     Properties:
+    #         RouteTableId: !Ref PrivateRouteTable2
+    #         DestinationCidrBlock: 0.0.0.0/0
+    #         GatewayId: local
+    #         #NatGatewayId: !Ref NatGateway2
 
-    PrivateRouteTable2:
-        Type: AWS::EC2::RouteTable
-        Properties: 
-            VpcId: !Ref VPC
-            Tags: 
-                - Key: Name 
-                  Value: !Sub ${StackName} Private Routes (AZ2)
+    # PrivateSubnet2RouteTableAssociation:
+    #     Type: AWS::EC2::SubnetRouteTableAssociation
+    #     Properties:
+    #         RouteTableId: !Ref PrivateRouteTable2
+    #         SubnetId: !Ref PrivateSubnet2
 
-    DefaultPrivateRoute2:
-        Type: AWS::EC2::Route
-        Properties:
-            RouteTableId: !Ref PrivateRouteTable2
-            DestinationCidrBlock: 0.0.0.0/0
-            NatGatewayId: !Ref NatGateway2
+    # Due to the lab participanters are using IAM user derived from the same root/billing user, 
+    # the NATGateway EIP usage can't offer the amounts for it. So close the NAT design first.
+    # In case of using different IAM user from different root user, then would open this.
 
-    PrivateSubnet2RouteTableAssociation:
-        Type: AWS::EC2::SubnetRouteTableAssociation
-        Properties:
-            RouteTableId: !Ref PrivateRouteTable2
-            SubnetId: !Ref PrivateSubnet2
+    # NatGateway1EIP:
+    #     Type: AWS::EC2::EIP
+    #     DependsOn: InternetGatewayAttachment
+    #     Properties: 
+    #         Domain: vpc
+
+    # NatGateway2EIP:
+    #     Type: AWS::EC2::EIP
+    #     DependsOn: InternetGatewayAttachment
+    #     Properties:
+    #         Domain: vpc
+
+    # NatGateway1: 
+    #     Type: AWS::EC2::NatGateway
+    #     Properties: 
+    #         AllocationId: !GetAtt NatGateway1EIP.AllocationId
+    #         SubnetId: !Ref PublicSubnet1
+
+    # NatGateway2: 
+    #     Type: AWS::EC2::NatGateway
+    #     Properties:
+    #         AllocationId: !GetAtt NatGateway2EIP.AllocationId
+    #         SubnetId: !Ref PublicSubnet2
 
 Outputs: 
 
@@ -262,3 +267,6 @@ Outputs:
                 "Fn::Sub": 
                     - ${StackName}-PrivateSubnet2
                     - StackName: !Ref AWS::StackName
+
+
+    

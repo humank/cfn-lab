@@ -24,7 +24,10 @@ Resources:
     LoadBalancer:
         Type: AWS::ElasticLoadBalancingV2::LoadBalancer
         Properties:
-            Name: ALBLoadBalancer
+            Name:
+                    "Fn::Sub":
+                        - "ALB-${StackName}"
+                        - StackName: !Ref AWS::StackName
             Subnets: !Ref Subnets
             SecurityGroups: 
                 - !Ref SecurityGroup
@@ -45,7 +48,10 @@ Resources:
     ALBTargetGroup:
             Type: AWS::ElasticLoadBalancingV2::TargetGroup
             Properties:
-                Name: ALBTargetGroup
+                Name:
+                    "Fn::Sub":
+                        - "TG-${StackName}"
+                        - StackName: !Ref AWS::StackName
                 VpcId: !Ref VPC
                 Port: 80
                 Protocol: HTTP

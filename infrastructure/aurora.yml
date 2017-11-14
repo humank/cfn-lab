@@ -176,8 +176,7 @@ Resources:
                     Ref: DatabaseReplicaInstance
           AlarmActions:
               - Ref: StackAlarmTopic
-
-
+              
 # segment for create parameter stores resource from the user input secured info
   PSDatabaseUsername:
     Type: "AWS::SSM::Parameter"
