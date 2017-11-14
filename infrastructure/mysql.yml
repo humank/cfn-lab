@@ -104,7 +104,7 @@ Resources:
     Type: "AWS::SSM::Parameter"
     Properties:
       #Naming convention : /environment/region/business app/component/parameter
-      Name: "/Prod/Tokyo/SimpleWeb/DatabaseUser"
+      Name: "/Lab/Tokyo/SimpleWeb/DatabaseUser"
       Type: "String"
       Value: !Ref DatabaseUser
       Description: "DatabaseUser for SimpleWeb application runs on Tokyo production env."
@@ -113,7 +113,7 @@ Resources:
     Type: "AWS::SSM::Parameter"
     Properties:
       #Naming convention : /environment/region/business app/component/parameter
-      Name: "/Prod/Tokyo/SimpleWeb/DatabasePassword"
+      Name: "/Lab/Tokyo/SimpleWeb/DatabasePassword"
       Type: "String"
       Value: !Ref DatabasePassword
       Description: "DatabasePassword for SimpleWeb application runs on Tokyo production env."      
@@ -122,7 +122,7 @@ Resources:
     Type: "AWS::SSM::Parameter"
     Properties:
       #Naming convention : /environment/region/business app/component/parameter
-      Name: "/Prod/Tokyo/SimpleWeb/DatabaseName"
+      Name: "/Lab/Tokyo/SimpleWeb/DatabaseName"
       Type: "String"
       Value: !Ref DatabaseName
       Description: "DatabaseName for SimpleWeb application runs on Tokyo production env." 
@@ -131,7 +131,7 @@ Resources:
     Type: "AWS::SSM::Parameter"
     Properties:
       #Naming convention : /environment/region/business app/component/parameter
-      Name: "/Prod/Tokyo/SimpleWeb/DatabaseURL"
+      Name: "/Lab/Tokyo/SimpleWeb/DatabaseURL"
       Type: "String"
       Value: !GetAtt Database.Endpoint.Address
       Description: "DatabaseUrl for SimpleWeb application runs on Tokyo production env." 

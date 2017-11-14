@@ -1,0 +1,242 @@
+Description: >
+    Create RDS Aurora cluster.
+Parameters:
+    StackName:
+      Description: Name of an active CloudFormation stack that contains networking resources.
+      Type: String
+    DatabaseInstanceType:
+      Default: db.t2.small
+      Description: The instance type to use for the database.
+      Type: String
+    DatabasePassword:
+      NoEcho: 'true'
+      Type: String
+    DatabaseUsername:
+      Description: The database admin account user name.
+      Type: String
+    DatabaseName:
+      Type: String
+      Description: Database name
+
+    DatabaseBackupRetentionPeriod:
+      Type: String
+      Default: 7
+      AllowedValues:
+          - 1
+          - 7
+      Description: The database backup retention period in days.
+    DatabaseSubnets:
+      Description: The subnets to place database instances in.
+      Type: List<AWS::EC2::Subnet::Id>
+    DatabaseSecurityGroups:
+      Type: List<AWS::EC2::SecurityGroup::Id>
+      Description: Security groups to apply to the RDS cluster.
+
+Resources:
+  StackAlarmTopic:
+      Type: AWS::SNS::Topic
+      Properties:
+          DisplayName: Stack Alarm Topic
+  DatabaseSubnetGroup:
+      Type: AWS::RDS::DBSubnetGroup
+      Properties:
+          DBSubnetGroupDescription: CloudFormation managed DB subnet group.
+          SubnetIds:
+              Ref: DatabaseSubnets
+  DatabaseCluster:
+      Type: AWS::RDS::DBCluster
+      Properties:
+          Engine: aurora
+          DatabaseName: !Ref DatabaseName
+          MasterUsername:
+              Ref: DatabaseUsername
+          MasterUserPassword:
+              Ref: DatabasePassword
+          BackupRetentionPeriod:
+              Ref: DatabaseBackupRetentionPeriod
+          PreferredBackupWindow: 02:00-03:00
+          PreferredMaintenanceWindow: mon:03:00-mon:04:00
+          DBSubnetGroupName:
+              Ref: DatabaseSubnetGroup
+          VpcSecurityGroupIds:
+              Ref: DatabaseSecurityGroups
+  DatabasePrimaryInstance:
+      Type: AWS::RDS::DBInstance
+      Properties:
+          Engine: aurora
+          DBClusterIdentifier:
+              Ref: DatabaseCluster
+          DBInstanceClass:
+              Ref: DatabaseInstanceType
+          DBSubnetGroupName:
+              Ref: DatabaseSubnetGroup
+  DatabaseReplicaInstance:
+      Type: AWS::RDS::DBInstance
+      Properties:
+          Engine: aurora
+          DBClusterIdentifier:
+              Ref: DatabaseCluster
+          DBInstanceClass:
+              Ref: DatabaseInstanceType
+          DBSubnetGroupName:
+              Ref: DatabaseSubnetGroup
+  DatabasePrimaryCPUAlarm:
+      Type: AWS::CloudWatch::Alarm
+      Properties:
+          AlarmDescription: Primary database CPU utilization is over 80%.
+          Namespace: AWS/RDS
+          MetricName: CPUUtilization
+          Unit: Percent
+          Statistic: Average
+          Period: 300
+          EvaluationPeriods: 2
+          Threshold: 80
+          ComparisonOperator: GreaterThanOrEqualToThreshold
+          Dimensions:
+              - Name: DBInstanceIdentifier
+                Value:
+                    Ref: DatabasePrimaryInstance
+          AlarmActions:
+              - Ref: StackAlarmTopic
+          InsufficientDataActions:
+              - Ref: StackAlarmTopic
+  DatabaseReplicaCPUAlarm:
+      Type: AWS::CloudWatch::Alarm
+      Properties:
+          AlarmDescription: Replica database CPU utilization is over 80%.
+          Namespace: AWS/RDS
+          MetricName: CPUUtilization
+          Unit: Percent
+          Statistic: Average
+          Period: 300
+          EvaluationPeriods: 2
+          Threshold: 80
+          ComparisonOperator: GreaterThanOrEqualToThreshold
+          Dimensions:
+              - Name: DBInstanceIdentifier
+                Value:
+                    Ref: DatabaseReplicaInstance
+          AlarmActions:
+              - Ref: StackAlarmTopic
+          InsufficientDataActions:
+              - Ref: StackAlarmTopic
+  DatabasePrimaryMemoryAlarm:
+      Type: AWS::CloudWatch::Alarm
+      Properties:
+          AlarmDescription: Replica database freeable memory is under 700MB.
+          Namespace: AWS/RDS
+          MetricName: FreeableMemory
+          Unit: Bytes
+          Statistic: Average
+          Period: 300
+          EvaluationPeriods: 2
+          Threshold: 700000000
+          ComparisonOperator: LessThanOrEqualToThreshold
+          Dimensions:
+              - Name: DBInstanceIdentifier
+                Value:
+                    Ref: DatabaseReplicaInstance
+          AlarmActions:
+              - Ref: StackAlarmTopic
+          InsufficientDataActions:
+              - Ref: StackAlarmTopic
+  DatabasePrimaryReplicationAlarm:
+      Type: AWS::CloudWatch::Alarm
+      Properties:
+          AlarmDescription: Database replication latency is over 200ms.
+          Namespace: AWS/RDS
+          MetricName: AuroraReplicaLag
+          Unit: Milliseconds
+          Statistic: Average
+          Period: 300
+          EvaluationPeriods: 2
+          Threshold: 200
+          ComparisonOperator: GreaterThanOrEqualToThreshold
+          Dimensions:
+              - Name: DBInstanceIdentifier
+                Value:
+                    Ref: DatabaseReplicaInstance
+          AlarmActions:
+              - Ref: StackAlarmTopic
+  DatabaseReplicaReplicationAlarm:
+      Type: AWS::CloudWatch::Alarm
+      Properties:
+          AlarmDescription: Database replication latency is over 200ms.
+          Namespace: AWS/RDS
+          MetricName: AuroraReplicaLag
+          Unit: Milliseconds
+          Statistic: Average
+          Period: 300
+          EvaluationPeriods: 2
+          Threshold: 200
+          ComparisonOperator: GreaterThanOrEqualToThreshold
+          Dimensions:
+              - Name: DBInstanceIdentifier
+                Value:
+                    Ref: DatabaseReplicaInstance
+          AlarmActions:
+              - Ref: StackAlarmTopic
+
+
+# segment for create parameter stores resource from the user input secured info
+  PSDatabaseUsername:
+    Type: "AWS::SSM::Parameter"
+    Properties:
+      #Naming convention : /environment/region/business app/component/parameter
+      Name: "/Lab/SimpleWeb/DatabaseUsername"
+      Type: "String"
+      Value: !Ref DatabaseUsername
+      Description: "DatabaseUsername for SimpleWeb application runs on  production env."
+
+  PSDatabasePassword:
+    Type: "AWS::SSM::Parameter"
+    Properties:
+      #Naming convention : /environment/region/business app/component/parameter
+      Name: "/Lab/SimpleWeb/DatabasePassword"
+      Type: "String"
+      Value: !Ref DatabasePassword
+      Description: "DatabasePassword for SimpleWeb application runs on  production env."      
+
+  PSDatabaseName:
+    Type: "AWS::SSM::Parameter"
+    Properties:
+      #Naming convention : /environment/region/business app/component/parameter
+      Name: "/Lab/SimpleWeb/DatabaseName"
+      Type: "String"
+      Value: !Ref DatabaseName
+      Description: "DatabaseName for SimpleWeb application runs on  production env." 
+
+  PSDatabaseUrl:
+    Type: "AWS::SSM::Parameter"
+    Properties:
+      #Naming convention : /environment/region/business app/component/parameter
+      Name: "/Lab/SimpleWeb/DatabaseURL"
+      Type: "String"
+      Value: !GetAtt DatabaseCluster.Endpoint.Address
+      Description: "DatabaseUrl for SimpleWeb application runs on  production env." 
+
+Outputs:
+
+  RdsDbId:
+    Description: RDS DatabaseCluster ID
+    Value: !Ref DatabaseCluster
+    Export:
+      Name: !Sub "${AWS::StackName}-DatabaseID"
+
+  RdsDbURL:
+    Description: RDS DatabaseCluster URL
+    Value: !GetAtt DatabaseCluster.Endpoint.Address
+    Export:
+      Name: !Sub "${AWS::StackName}-DatabaseURL"
+
+  DatabaseUsername:
+    Description: RDS DatabaseCluster admin account user
+    Value: !Ref DatabaseUsername
+    Export:
+      Name: !Sub "${AWS::StackName}-DatabaseUsername"
+
+  DbPassword:
+    Description: RDS DatabaseCluster admin account password
+    Value: !Ref DatabasePassword
+    Export:
+      Name: !Sub "${AWS::StackName}-DatabasePassword"
