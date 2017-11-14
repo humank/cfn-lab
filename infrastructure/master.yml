@@ -100,6 +100,14 @@ Parameters:
             - 7
         Description: The database backup retention period in days.
 
+    # PS-Key-DatabaseName:
+    #     Type: String
+    #     Description: Naming convention - /team/your name/
+    # PS-Key-DatabasePassword:
+    # PS-Key-DatabaseUsername:
+    # PS-Key-DatabaseUrl:
+
+
 
 Resources:
     VPC:
@@ -124,7 +132,6 @@ Resources:
                 PublicSubnet1CIDR:  !Ref PublicSubnet1CIDR
                 PublicSubnet2CIDR:  !Ref PublicSubnet2CIDR
 
-
     ALB:
         Type: AWS::CloudFormation::Stack
         Properties:
@@ -134,36 +141,6 @@ Resources:
                 VPC: !GetAtt ["VPC","Outputs.VpcId"]
                 Subnets: !GetAtt ["VPC","Outputs.PublicSubnets"]
                 SecurityGroup: !GetAtt ["SecurityGroups","Outputs.LoadBalancerSecurityGroup"]
-
-    ASGEC2:
-        Type: AWS::CloudFormation::Stack
-        Properties:
-            TemplateURL: https://s3.amazonaws.com/cnf-stackset-lab-20171116-dlink/asgec2.yml
-            Parameters:
-                StackName: !GetAtt ["VPC", "Outputs.StackName"]
-                Subnets: !GetAtt ["VPC","Outputs.PublicSubnets"]
-                ALBTargetGroup: !GetAtt ["ALB","Outputs.ALBTargetGroup"]
-                EC2HostSecurityGroup: !GetAtt ["SecurityGroups","Outputs.EC2HostSecurityGroup"]
-                KeyName: !Ref KeyName
-                AsgInstanceType: !Ref AsgInstanceType
-                AsgTargetCapacity: !Ref AsgTargetCapacity
-                SpotPrice: !Ref SpotPrice
-
-    # RDSMYSQL:
-    #     Type: AWS::CloudFormation::Stack
-    #     Properties:
-    #         TemplateURL: https://s3.amazonaws.com/cnf-stackset-lab-20171116-dlink/mysql.yml
-    #         Parameters:
-    #             StackName: !GetAtt ["VPC", "Outputs.StackName"] 
-    #             DbSecurityGroup: !GetAtt ["SecurityGroups","Outputs.DbSecurityGroup"]
-    #             PrivateSubnet1: !GetAtt ["VPC", "Outputs.PrivateSubnet1"] 
-    #             PrivateSubnet2: !GetAtt ["VPC", "Outputs.PrivateSubnet2"] 
-    #             DatabaseUser: dlinkdemo
-    #             DatabasePassword: dlinkdemo
-    #             DatabaseName: dlinkdemo
-    #             DatabaseSize: 5
-    #             DatabaseEngine: mysql
-    #             DatabaseInstanceClass: db.t2.micro
 
     RDSAURORA:
         Type: AWS::CloudFormation::Stack
@@ -190,3 +167,34 @@ Resources:
                 KeyName: !Ref KeyName
                 BastionInstanceType: !Ref BastionInstanceType
                 BastionSSHLocation: !Ref BastionSSHLocation
+
+    ASGEC2:
+        Type: AWS::CloudFormation::Stack
+        Properties:
+            TemplateURL: https://s3.amazonaws.com/cnf-stackset-lab-20171116-dlink/asgec2.yml
+            Parameters:
+                StackName: !GetAtt ["VPC", "Outputs.StackName"]
+                Subnets: !GetAtt ["VPC","Outputs.PublicSubnets"]
+                ALBTargetGroup: !GetAtt ["ALB","Outputs.ALBTargetGroup"]
+                EC2HostSecurityGroup: !GetAtt ["SecurityGroups","Outputs.EC2HostSecurityGroup"]
+                KeyName: !Ref KeyName
+                AsgInstanceType: !Ref AsgInstanceType
+                AsgTargetCapacity: !Ref AsgTargetCapacity
+                SpotPrice: !Ref SpotPrice
+                PSPostfix: !GetAtt ["RDSAURORA","Outputs.PSPostfix"]
+
+    # RDSMYSQL:
+    #     Type: AWS::CloudFormation::Stack
+    #     Properties:
+    #         TemplateURL: https://s3.amazonaws.com/cnf-stackset-lab-20171116-dlink/mysql.yml
+    #         Parameters:
+    #             StackName: !GetAtt ["VPC", "Outputs.StackName"] 
+    #             DbSecurityGroup: !GetAtt ["SecurityGroups","Outputs.DbSecurityGroup"]
+    #             PrivateSubnet1: !GetAtt ["VPC", "Outputs.PrivateSubnet1"] 
+    #             PrivateSubnet2: !GetAtt ["VPC", "Outputs.PrivateSubnet2"] 
+    #             DatabaseUser: dlinkdemo
+    #             DatabasePassword: dlinkdemo
+    #             DatabaseName: dlinkdemo
+    #             DatabaseSize: 5
+    #             DatabaseEngine: mysql
+    #             DatabaseInstanceClass: db.t2.micro   

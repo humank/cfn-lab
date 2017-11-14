@@ -41,8 +41,11 @@ Resources:
             VpcId: !Ref VPC
             GroupDescription: Access to the EC2 hosts and the tasks/containers that run on them
             SecurityGroupIngress:
-                # Only allow inbound access to EC2 from the ELB
+                #  allow inbound access to EC2 from the ELB
                 - SourceSecurityGroupId: !Ref LoadBalancerSecurityGroup 
+                  IpProtocol: -1 
+                #  allow inbound access to EC2 from the Bastion
+                - SourceSecurityGroupId: !Ref BastionHostSecurityGroup 
                   IpProtocol: -1 
             Tags: 
                 - Key: Name

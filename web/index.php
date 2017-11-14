@@ -6,8 +6,14 @@ $ssm = new Aws\Ssm\SsmClient([
         'region' => 'ap-northeast-1',
         'version' => '2014-11-06'
 ]);
+$psPrefix ='/Lab/SimpleWeb/';
+$psDbURL = 'DatabaseURL-';
+$psDbPassword = 'DatabasePassword-';
+$psDbName = 'DatabaseName-';
+$psDbUsername = 'DatabaseUsername-';
+
 $result = $ssm->getParametersByPath([
-        'Path' => '/Lab/SimpleWeb/', // REQUIRED
+        'Path' => $psPrefix, // REQUIRED
 ]);
 $arrParams = $result['Parameters'];
 $dbusername ='';
@@ -16,16 +22,16 @@ $hostname ='';
 $dbname ='';
 $serverip = $_SERVER['SERVER_ADDR'];
 foreach ($arrParams as $param) {
-        if('/Lab/SimpleWeb/DatabaseURL'===$param['Name']){
+        if(($psPrefix . $psDbURL)  ===$param['Name']){
                 $hostname = $param['Value'];
         }
-        if('/Lab/SimpleWeb/DatabasePassword'===$param['Name']){
+        if(($psPrefix . $psDbPassword) === $param['Name']){
                 $password = $param['Value'];
         }
-        if('/Lab/SimpleWeb/DatabaseName'===$param['Name']){
+        if(($psPrefix . $psDbName) === $param['Name']){
                 $dbname = $param['Value'];
         }
-        if('/Lab/SimpleWeb/DatabaseUsername'===$param['Name']){
+        if(($psPrefix . $psDbUsername) === $param['Name']){
                 $dbusername = $param['Value'];
         }
 }

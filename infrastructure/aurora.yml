@@ -176,13 +176,16 @@ Resources:
                     Ref: DatabaseReplicaInstance
           AlarmActions:
               - Ref: StackAlarmTopic
-              
+
 # segment for create parameter stores resource from the user input secured info
   PSDatabaseUsername:
     Type: "AWS::SSM::Parameter"
     Properties:
       #Naming convention : /environment/region/business app/component/parameter
-      Name: "/Lab/SimpleWeb/DatabaseUsername"
+      Name:
+        "Fn::Sub":
+          - "/Lab/SimpleWeb/DatabaseUsername-${StackName}"
+          - StackName: !Ref AWS::StackName
       Type: "String"
       Value: !Ref DatabaseUsername
       Description: "DatabaseUsername for SimpleWeb application runs on  production env."
@@ -191,7 +194,10 @@ Resources:
     Type: "AWS::SSM::Parameter"
     Properties:
       #Naming convention : /environment/region/business app/component/parameter
-      Name: "/Lab/SimpleWeb/DatabasePassword"
+      Name:
+        "Fn::Sub":
+          - "/Lab/SimpleWeb/DatabasePassword-${StackName}"
+          - StackName: !Ref AWS::StackName
       Type: "String"
       Value: !Ref DatabasePassword
       Description: "DatabasePassword for SimpleWeb application runs on  production env."      
@@ -200,7 +206,10 @@ Resources:
     Type: "AWS::SSM::Parameter"
     Properties:
       #Naming convention : /environment/region/business app/component/parameter
-      Name: "/Lab/SimpleWeb/DatabaseName"
+      Name:
+        "Fn::Sub":
+          - "/Lab/SimpleWeb/DatabaseName-${StackName}"
+          - StackName: !Ref AWS::StackName
       Type: "String"
       Value: !Ref DatabaseName
       Description: "DatabaseName for SimpleWeb application runs on  production env." 
@@ -209,12 +218,19 @@ Resources:
     Type: "AWS::SSM::Parameter"
     Properties:
       #Naming convention : /environment/region/business app/component/parameter
-      Name: "/Lab/SimpleWeb/DatabaseURL"
+      Name:
+        "Fn::Sub":
+          - "/Lab/SimpleWeb/DatabaseURL-${StackName}"
+          - StackName: !Ref AWS::StackName
       Type: "String"
       Value: !GetAtt DatabaseCluster.Endpoint.Address
       Description: "DatabaseUrl for SimpleWeb application runs on  production env." 
 
 Outputs:
+
+  PSPostfix:
+    Description: Take the current stackname as Postfix String for the Parameter Store
+    Value: !Ref AWS::StackName
 
   RdsDbId:
     Description: RDS DatabaseCluster ID
