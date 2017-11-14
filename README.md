@@ -70,23 +70,14 @@ Of course, you can also transfer the different format in 1 second, check this ->
 3. Generate or keep the IAM User Accesskey csv file, will leverage the Accesskey and AccessSecurityKey to SSH into EC2 instance for check status. 
 --> 需要補圖做說明
 
-click the button to launch the demo stack in *us-west-2*
-
-[![cloudformation-launch-stack](https://s3.amazonaws.com/cloudformation-examples/cloudformation-launch-stack.png)](https://console.aws.amazon.com/cloudformation/home?region=us-west-2#/stacks/new?stackName=ecs-refarch&templateURL=https://s3-us-west-2.amazonaws.com/pahud-cfn-us-west-2/ecs-cfn-refarch/cloudformation/service.yml)
-
-check the cloudformation output and click the ***LoadBalancerURL*** link to see the result.
 
 click the button to launch the demo stack in *Tokyo*
 
-[![cloudformation-launch-stack](https://s3.amazonaws.com/cloudformation-examples/cloudformation-launch-stack.png)](https://console.aws.amazon.com/cloudformation/home?region=us-west-2#/stacks/new?stackName=ecs-refarch&templateURL=https://s3-us-west-2.amazonaws.com/pahud-cfn-us-west-2/ecs-cfn-refarch/cloudformation/service.yml)
+[![cloudformation-launch-stack](https://s3.amazonaws.com/cloudformation-examples/cloudformation-launch-stack.png)](https://console.aws.amazon.com/cloudformation/home?region=ap-northeast-1#/stacks/new?stackName=nov-15-go&templateURL=https://s3.us-east-2.amazonaws.com/cnf-stackset-lab-20171116-dlink/master.yml)
 
 check the cloudformation output and click the ***LoadBalancerURL*** link to see the result.
 
-click the button to launch the demo stack in *us-west-1*
 
-[![cloudformation-launch-stack](https://s3.amazonaws.com/cloudformation-examples/cloudformation-launch-stack.png)](https://console.aws.amazon.com/cloudformation/home?region=us-west-2#/stacks/new?stackName=ecs-refarch&templateURL=https://s3-us-west-2.amazonaws.com/pahud-cfn-us-west-2/ecs-cfn-refarch/cloudformation/service.yml)
-
-check the cloudformation output and click the ***LoadBalancerURL*** link to see the result.
 
 ## Step 1 Create VPC template
 
