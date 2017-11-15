@@ -72,7 +72,9 @@ Resources:
     Condition: EnableASGCond
     Type: AWS::AutoScaling::LaunchConfiguration
     Properties:
-      AssociatePublicIpAddress: true
+      #for debug level only, recommend not to bind it.
+      #AssociatePublicIpAddress: true
+      AssociatePublicIpAddress: false
       ImageId: !Ref ImageId
       IamInstanceProfile: !Ref EC2Role
       InstanceType: !Ref AsgInstanceType
@@ -86,44 +88,33 @@ Resources:
           - !Ref AWS::NoValue
       UserData: 
 
-#echo export AWS_DEFAULT_REGION=${AWS::Region} >> /etc/profile
-                #echo export auroraArn=$(aws rds describe-db-instances --query DBInstances[0].DBInstanceArn | cut -c45-59) >> /etc/profile
-                
-
-
-
         "Fn::Base64": 
               !Sub |
                 #!/bin/bash
-                echo "start to see !" >> /tmp/userdata.log 2>&1
+                echo "start to see !"
                 auroraArn=${PSPostfix}
-                echo $auroraArn >> /tmp/userdata.log 2>&1
+                echo $auroraArn
                 
-                yum update -y >> /tmp/userdata.log 2>&1
-                yum remove httpd* php* -y >> /tmp/userdata.log 2>&1
-                yum install httpd24* -y >> /tmp/userdata.log 2>&1
-                yum install php70* -y >> /tmp/userdata.log 2>&1
+                yum update -y
+                yum remove httpd* php* -y
+                yum install httpd24* -y
+                yum install php70* -y
                 
-                chkconfig httpd on >> /tmp/userdata.log 2>&1
-                service httpd start >> /tmp/userdata.log 2>&1
-                
-                #yum install -y jq >> /tmp/userdata.log 2>&1
-                #theRegion=$(curl --silent http://169.254.169.254/latest/dynamic/instance-identity/document | jq -r .region) >> /tmp/userdata.log 2>&1          
-                #aws configure set default.region $theRegion >> /tmp/userdata.log 2>&1
-                #auroraArn=$(aws rds describe-db-instances --query DBInstances[0].DBInstanceArn | cut -c45-59) >> /tmp/userdata.log 2>&1
-                
-                cd /var/www/html >> /tmp/userdata.log 2>&1
+                chkconfig httpd on
+                service httpd start
 
-                export COMPOSER_HOME=~/.composer >> /tmp/userdata.log 2>&1
-                curl -sS https://getcomposer.org/installer | php >> /tmp/userdata.log 2>&1
-                php composer.phar require aws/aws-sdk-php >> /tmp/userdata.log 2>&1
+                cd /var/www/html
+
+                export COMPOSER_HOME=~/.composer
+                curl -sS https://getcomposer.org/installer | php
+                php composer.phar require aws/aws-sdk-php
                 
-                curl -o index.php https://s3.us-east-2.amazonaws.com/cnf-stackset-lab-20171116-dlink/index.php >> /tmp/userdata.log 2>&1
+                curl -o index.php https://s3.us-east-2.amazonaws.com/cnf-stackset-lab-20171116-dlink/index.php
                 
-                sed -i 's/DatabaseURL-/DatabaseURL-'"$auroraArn"'/g' index.php >> /tmp/userdata.log 2>&1
-                sed -i 's/DatabasePassword-/DatabasePassword-'"$auroraArn"'/g' index.php >> /tmp/userdata.log 2>&1
-                sed -i 's/DatabaseName-/DatabaseName-'"$auroraArn"'/g' index.php >> /tmp/userdata.log 2>&1
-                sed -i 's/DatabaseUsername-/DatabaseUsername-'"$auroraArn"'/g' index.php >> /tmp/userdata.log 2>&1
+                sed -i 's/DatabaseURL-/DatabaseURL-'"$auroraArn"'/g' index.php
+                sed -i 's/DatabasePassword-/DatabasePassword-'"$auroraArn"'/g' index.php
+                sed -i 's/DatabaseName-/DatabaseName-'"$auroraArn"'/g' index.php
+                sed -i 's/DatabaseUsername-/DatabaseUsername-'"$auroraArn"'/g' index.php
 
   AppASG:
     Type: AWS::AutoScaling::AutoScalingGroup
@@ -163,3 +154,14 @@ Resources:
   #       - Key: Name
   #         Value: EBS-DISK
   #     VolumeType: io1
+
+# Useful instruction
+
+# debug the userdata runnong status >> /tmp/userdata.log 2>&1 
+
+#echo export AWS_DEFAULT_REGION=${AWS::Region} >> /etc/profile
+#echo export auroraArn=$(aws rds describe-db-instances --query DBInstances[0].DBInstanceArn | cut -c45-59) >> /etc/profile
+#yum install -y jq
+#theRegion=$(curl --silent http://169.254.169.254/latest/dynamic/instance-identity/document | jq -r .region)          
+#aws configure set default.region $theRegion
+#auroraArn=$(aws rds describe-db-instances --query DBInstances[0].DBInstanceArn | cut -c45-59)
