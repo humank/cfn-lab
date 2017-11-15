@@ -33,6 +33,7 @@ Parameters:
     Description: The instance which you request for spot fleet
     Default: m3.medium
     Type: String
+    AllowedValues: [t2.small, t2.medium, m3.medium]
 
   AsgTargetCapacity:
     Description: The request ec2 instance spot capacity
@@ -60,23 +61,75 @@ Parameters:
     Type: String
     Description: Parameter Store postfix from Aurora creation stackname  
 
-Resources:
+Mappings:
+  AWSInstanceType2Arch:
+    t2.small:
+      Arch: '64' 
+    t2.medium: 
+      Arch: '64' 
+    m3.medium:
+      Arch: '64' 
+  AWSRegionArch2AMI:
+    ap-northeast-1:
+      '64': ami-2803ac4e
+    us-east-1:
+      '64': ami-6057e21a
+    us-east-1:
+      '64': ami-aa1b34cf
+    us-west-1:
+      '64': ami-1a033c7a
+    us-west-2:
+      '64': ami-32d8124a
 
-  EC2Role:
-    Type: AWS::IAM::InstanceProfile
+Resources:
+  RootRole: 
+    Type: "AWS::IAM::Role"
     Properties: 
-      Path: /
-      Roles: ['ec2cfn']
+      AssumeRolePolicyDocument: 
+        Version: "2012-10-17"
+        Statement: 
+          - 
+            Effect: "Allow"
+            Principal: 
+              Service: 
+                - "ec2.amazonaws.com"
+            Action: 
+              - "sts:AssumeRole"
+      Path: "/"
+      Policies: 
+        - 
+          PolicyName: "root"
+          PolicyDocument: 
+            Version: "2012-10-17"
+            Statement: 
+              - 
+                Effect: "Allow"
+                Action: "*"
+                Resource: "*"
+  RootInstanceProfile: 
+    Type: "AWS::IAM::InstanceProfile"
+    Properties: 
+      Path: "/"
+      Roles: 
+        - 
+          Ref: "RootRole"
+
+  # EC2Role:
+  #   Type: AWS::IAM::InstanceProfile
+  #   Properties: 
+  #     Path: /
+  #     Roles: ['ec2cfn']
 
   AppLaunchConfiguration:
     Condition: EnableASGCond
     Type: AWS::AutoScaling::LaunchConfiguration
     Properties:
-      #for debug level only, recommend not to bind it.
-      #AssociatePublicIpAddress: true
-      AssociatePublicIpAddress: false
-      ImageId: !Ref ImageId
-      IamInstanceProfile: !Ref EC2Role
+      AssociatePublicIpAddress: true
+      #ImageId: !Ref ImageId
+      ImageId:
+        !FindInMap [AWSRegionArch2AMI, !Ref 'AWS::Region', !FindInMap [AWSInstanceType2Arch,
+          !Ref 'AsgInstanceType', Arch]]
+      IamInstanceProfile: !Ref RootInstanceProfile
       InstanceType: !Ref AsgInstanceType
       SecurityGroups: !Ref EC2HostSecurityGroup
       InstanceMonitoring: true
@@ -91,30 +144,33 @@ Resources:
         "Fn::Base64": 
               !Sub |
                 #!/bin/bash
-                echo "start to see !"
-                auroraArn=${PSPostfix}
-                echo $auroraArn
+                echo "start to see !" >> /tmp/userdata.log 2>&1 
+                auroraArn=${PSPostfix} >> /tmp/userdata.log 2>&1 
+                echo $auroraArn >> /tmp/userdata.log 2>&1 
+                az=$(curl -s http://169.254.169.254/latest/meta-data/placement/availability-zone)
+                echo $az >> /tmp/userdata.log 2>&1 
+                region=${az%%[a-z]}
+                echo $region
+                yum update -y >> /tmp/userdata.log 2>&1 
+                yum remove httpd* php* -y >> /tmp/userdata.log 2>&1 
+                yum install httpd24* -y >> /tmp/userdata.log 2>&1 
+                yum install php70* -y >> /tmp/userdata.log 2>&1 
                 
-                yum update -y
-                yum remove httpd* php* -y
-                yum install httpd24* -y
-                yum install php70* -y
-                
-                chkconfig httpd on
-                service httpd start
+                chkconfig httpd on >> /tmp/userdata.log 2>&1 
+                service httpd start >> /tmp/userdata.log 2>&1 
 
-                cd /var/www/html
+                cd /var/www/html >> /tmp/userdata.log 2>&1 
 
-                export COMPOSER_HOME=~/.composer
-                curl -sS https://getcomposer.org/installer | php
-                php composer.phar require aws/aws-sdk-php
+                export COMPOSER_HOME=~/.composer >> /tmp/userdata.log 2>&1 
+                curl -sS https://getcomposer.org/installer | php >> /tmp/userdata.log 2>&1 
+                php composer.phar require aws/aws-sdk-php >> /tmp/userdata.log 2>&1 
                 
-                curl -o index.php https://s3.us-east-2.amazonaws.com/cnf-stackset-lab-20171116-dlink/index.php
-                
-                sed -i 's/DatabaseURL-/DatabaseURL-'"$auroraArn"'/g' index.php
-                sed -i 's/DatabasePassword-/DatabasePassword-'"$auroraArn"'/g' index.php
-                sed -i 's/DatabaseName-/DatabaseName-'"$auroraArn"'/g' index.php
-                sed -i 's/DatabaseUsername-/DatabaseUsername-'"$auroraArn"'/g' index.php
+                curl -o index.php https://s3.us-east-2.amazonaws.com/cnf-stackset-lab-20171116-dlink/index.php >> /tmp/userdata.log 2>&1 
+                sed -i 's/defaultRegion/'"$region"'/g' index.php >> /tmp/userdata.log 2>&1
+                sed -i 's/DatabaseURL-/DatabaseURL-'"$auroraArn"'/g' index.php >> /tmp/userdata.log 2>&1 
+                sed -i 's/DatabasePassword-/DatabasePassword-'"$auroraArn"'/g' index.php >> /tmp/userdata.log 2>&1 
+                sed -i 's/DatabaseName-/DatabaseName-'"$auroraArn"'/g' index.php >> /tmp/userdata.log 2>&1 
+                sed -i 's/DatabaseUsername-/DatabaseUsername-'"$auroraArn"'/g' index.php >> /tmp/userdata.log 2>&1 
 
   AppASG:
     Type: AWS::AutoScaling::AutoScalingGroup
@@ -128,7 +184,6 @@ Resources:
               - StackName: !Ref AWS::StackName
           Key: Name
           PropagateAtLaunch: true
-      #TargetGroupARNs: [!Ref ALBLoadBalancer]
       TargetGroupARNs: [ !Ref ALBTargetGroup ]
       MaxSize: 6
       MinSize: 2

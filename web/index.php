@@ -3,7 +3,7 @@ require 'vendor/autoload.php';
 use Aws\Ssm\SsmClient;
 use Aws\Ec2\Ec2Client;
 $ssm = new Aws\Ssm\SsmClient([
-        'region' => 'ap-northeast-1',
+        'region' => 'defaultRegion',
         'version' => '2014-11-06'
 ]);
 $psPrefix ='/Lab/SimpleWeb/';

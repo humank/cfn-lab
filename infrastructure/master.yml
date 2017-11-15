@@ -38,16 +38,12 @@ Parameters:
         Description: The instance which you request for spot instance
         Default: m3.medium
         Type: String
+        AllowedValues: [t2.small, t2.medium,m3.medium]
 
     AsgTargetCapacity:
         Description: The request ec2 instance spot capacity
         Type: String
         Default: 2
-
-    AsgInstanceImageId:
-        Description: The AMI ID
-        Type: String
-        Default: ami-2803ac4e
     
     SpotPrice:
         Type: Number
@@ -107,7 +103,25 @@ Parameters:
     # PS-Key-DatabaseUsername:
     # PS-Key-DatabaseUrl:
 
-
+Mappings:
+  AWSInstanceType2Arch:
+    t2.small:
+      Arch: '64' 
+    t2.medium: 
+      Arch: '64' 
+    m3.medium:
+      Arch: '64' 
+  AWSRegionArch2AMI:
+    ap-northeast-1:
+      '64': ami-2803ac4e
+    us-east-1:
+      '64': ami-6057e21a
+    us-east-1:
+      '64': ami-aa1b34cf
+    us-west-1:
+      '64': ami-1a033c7a
+    us-west-2:
+      '64': ami-32d8124a
 
 Resources:
     VPC:

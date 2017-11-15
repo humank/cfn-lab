@@ -39,13 +39,37 @@ Parameters:
     Type: String
     Default: ami-2803ac4e
 
+Mappings:
+  AWSInstanceType2Arch:
+    t2.small:
+      Arch: '64'
+    t2.micro:
+      Arch: '64' 
+    t2.medium: 
+      Arch: '64' 
+    m3.medium:
+      Arch: '64' 
+  AWSRegionArch2AMI:
+    ap-northeast-1:
+      '64': ami-2803ac4e
+    us-east-1:
+      '64': ami-6057e21a
+    us-east-1:
+      '64': ami-aa1b34cf
+    us-west-1:
+      '64': ami-1a033c7a
+    us-west-2:
+      '64': ami-32d8124a
       
 Resources:
   BastionLaunchConfiguration:
     Type: AWS::AutoScaling::LaunchConfiguration
     Properties:
       AssociatePublicIpAddress: true
-      ImageId: !Ref BastionImageId
+      #ImageId: !Ref BastionImageId
+      ImageId:
+        !FindInMap [AWSRegionArch2AMI, !Ref 'AWS::Region', !FindInMap [AWSInstanceType2Arch,
+          !Ref 'BastionInstanceType', Arch]]
       InstanceType: !Ref BastionInstanceType
       SecurityGroups: !Ref BastionHostSecurityGroup
       InstanceMonitoring: true
