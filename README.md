@@ -1,4 +1,7 @@
 # Purpose
+
+![System Architecture](images/system-architecture.png "Logo Title Text 1")
+
 To familiar with Infrastructure as code, using AWS Cloudformation template to design a sample web application architecture.
 
 Go through this lab, you will realize Cloudformation (a.k.a -> cfn) how to arrange resources, coordinate the resources component interaction, and associate them within few commands.
