@@ -41,12 +41,12 @@ Resources:
             VpcId: !Ref VPC
             GroupDescription: Access to the EC2 hosts and the tasks/containers that run on them
             SecurityGroupIngress:
-                #  allow inbound access to EC2 from the ELB
                 - SourceSecurityGroupId: !Ref LoadBalancerSecurityGroup 
                   IpProtocol: -1 
-                #  allow inbound access to EC2 from the Bastion
+                  Description: allow inbound access to EC2 from the ELB
                 - SourceSecurityGroupId: !Ref BastionHostSecurityGroup 
                   IpProtocol: -1 
+                  Description: allow inbound access to EC2 from the Bastion
             Tags: 
                 - Key: Name
                   Value: !Sub ${StackName}-EC2-Hosts
@@ -63,6 +63,7 @@ Resources:
                 # Allow access from anywhere to our EC2 services
                 - CidrIp: 0.0.0.0/0
                   IpProtocol: -1
+                  Description: Allow access from anywhere to send request to Loadbalancer, then forward to EC2 services
             Tags: 
                 - Key: Name
                   Value: !Sub ${StackName}-LoadBalancers
@@ -84,6 +85,7 @@ Resources:
         Properties:
             GroupDescription: Enable access to the RDS DB
             VpcId: !Ref VPC
+            Description: Allow traffic from the PublicSubnets
             SecurityGroupIngress:
             - 
                 CidrIp: !Ref PublicSubnet1CIDR
