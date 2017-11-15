@@ -83,9 +83,9 @@ Resources:
     DbSecurityGroup:
         Type: AWS::EC2::SecurityGroup
         Properties:
-            GroupDescription: Enable access to the RDS DB
+            GroupDescription: Enable access to the RDS DB, allow traffic from the PublicSubnets
             VpcId: !Ref VPC
-            Description: Allow traffic from the PublicSubnets
+            Description: 
             SecurityGroupIngress:
             - 
                 CidrIp: !Ref PublicSubnet1CIDR
