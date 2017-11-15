@@ -64,6 +64,8 @@ Parameters:
 Mappings:
   AWSInstanceType2Arch:
     t2.small:
+      Arch: '64'
+    t2.micro:
       Arch: '64' 
     t2.medium: 
       Arch: '64' 
@@ -114,18 +116,11 @@ Resources:
         - 
           Ref: "RootRole"
 
-  # EC2Role:
-  #   Type: AWS::IAM::InstanceProfile
-  #   Properties: 
-  #     Path: /
-  #     Roles: ['ec2cfn']
-
   AppLaunchConfiguration:
     Condition: EnableASGCond
     Type: AWS::AutoScaling::LaunchConfiguration
     Properties:
       AssociatePublicIpAddress: true
-      #ImageId: !Ref ImageId
       ImageId:
         !FindInMap [AWSRegionArch2AMI, !Ref 'AWS::Region', !FindInMap [AWSInstanceType2Arch,
           !Ref 'AsgInstanceType', Arch]]
@@ -147,10 +142,9 @@ Resources:
                 echo "start to see !" >> /tmp/userdata.log 2>&1 
                 auroraArn=${PSPostfix} >> /tmp/userdata.log 2>&1 
                 echo $auroraArn >> /tmp/userdata.log 2>&1 
-                az=$(curl -s http://169.254.169.254/latest/meta-data/placement/availability-zone)
-                echo $az >> /tmp/userdata.log 2>&1 
-                region=${az%%[a-z]}
-                echo $region
+                
+                yum install -y jq
+                currentregion=`curl -s http://169.254.169.254/latest/dynamic/instance-identity/document | jq .region -r`
                 yum update -y >> /tmp/userdata.log 2>&1 
                 yum remove httpd* php* -y >> /tmp/userdata.log 2>&1 
                 yum install httpd24* -y >> /tmp/userdata.log 2>&1 
@@ -166,7 +160,7 @@ Resources:
                 php composer.phar require aws/aws-sdk-php >> /tmp/userdata.log 2>&1 
                 
                 curl -o index.php https://s3.us-east-2.amazonaws.com/cnf-stackset-lab-20171116-dlink/index.php >> /tmp/userdata.log 2>&1 
-                sed -i 's/defaultRegion/'"$region"'/g' index.php >> /tmp/userdata.log 2>&1
+                sed -i 's/defaultRegion/'"$currentregion"'/g' index.php >> /tmp/userdata.log 2>&1
                 sed -i 's/DatabaseURL-/DatabaseURL-'"$auroraArn"'/g' index.php >> /tmp/userdata.log 2>&1 
                 sed -i 's/DatabasePassword-/DatabasePassword-'"$auroraArn"'/g' index.php >> /tmp/userdata.log 2>&1 
                 sed -i 's/DatabaseName-/DatabaseName-'"$auroraArn"'/g' index.php >> /tmp/userdata.log 2>&1 
@@ -193,30 +187,3 @@ Resources:
     UpdatePolicy:
       AutoScalingRollingUpdate:
         MinInstancesInService: 2
-
-  # EBSVolume:
-  #   Type: AWS::EC2::Volume
-  #   Properties:
-  #     AutoEnableIO: false
-  #     AvailabilityZone:
-  #       Fn::Select:
-  #         - 0 
-  #         - Fn::GetAZs: ""
-  #     Encrypted: false
-  #     Iops: 100
-  #     Size: 5
-  #     Tags:
-  #       - Key: Name
-  #         Value: EBS-DISK
-  #     VolumeType: io1
-
-# Useful instruction
-
-# debug the userdata runnong status >> /tmp/userdata.log 2>&1 
-
-#echo export AWS_DEFAULT_REGION=${AWS::Region} >> /etc/profile
-#echo export auroraArn=$(aws rds describe-db-instances --query DBInstances[0].DBInstanceArn | cut -c45-59) >> /etc/profile
-#yum install -y jq
-#theRegion=$(curl --silent http://169.254.169.254/latest/dynamic/instance-identity/document | jq -r .region)          
-#aws configure set default.region $theRegion
-#auroraArn=$(aws rds describe-db-instances --query DBInstances[0].DBInstanceArn | cut -c45-59)

@@ -26,7 +26,7 @@ Cloudfomration components design just like playing lego. If you want to construc
 
 # Go Labs
 
-## Step 0 Prepare development environment
+## Prepare development environment
 
 Recommend to use Visual Studio Code or Atom IDE to design CFN, leverage useful plugin would help you to design it effectively.
 
@@ -58,18 +58,7 @@ Of course, you can also transfer the different format in 1 second, check this ->
 
 [Atom atom-cform package](https://atom.io/packages/atom-cform)
 
-### Make Lab ready
-1. Clone lab project
-
-> git clone https://github.com/humank/20171116-cfn-lab.git
-
-2. Create S3 Bucket to store Cloudformation Template for later usage.
-
-> Recommend to practice this lab at Region Tokyo to have good user experience, create a s3 Bucket at Region Tokyo is good but not must .--> 需要補圖做說明
-
-3. Generate or keep the IAM User Accesskey csv file, will leverage the Accesskey and AccessSecurityKey to SSH into EC2 instance for check status. 
---> 需要補圖做說明
-
+## OneClick Go
 
 click the button to launch the demo stack in *Tokyo*
 
@@ -77,37 +66,27 @@ click the button to launch the demo stack in *Tokyo*
 
 check the cloudformation output and click the ***LoadBalancerURL*** link to see the result.
 
+## Hands-on practice
 
+1. Clone lab project
 
-## Step 1 Create VPC template
+> git clone https://github.com/humank/20171116-cfn-lab.git
 
-<img src="images/Step1-VPC.png">
-Change directory to LAB_PROJECT_FOLDER/setp1.
-Contains two files :
+2. Create S3 Bucket to store Cloudformation Template for later usage.
 
-1. master.yml
-2. vpc.yml
+> Recommend to practice this lab at nearest Region to get better user experience.
 
+3. Generate or keep the IAM User Accesskey csv file, will leverage the Accesskey and AccessSecurityKey to SSH into EC2 instance for check status. 
 
+4. Modify the file : 20171116-cfn-lab/infrastructure/master.yml, replace all the contained stack yml file path to your s3 bucket which just created.
 
-## Step 2 Create Security Groups template
+5. Modify the file : 20171116-cfn-lab/web/index.php, replace the line
 
-## Step 3 Create Application Load Balancer template
+> curl -o index.php https://s3.us-east-2.amazonaws.com/cnf-stackset-lab-20171116-dlink/index.php >> /tmp/userdata.log 2>&1 
 
-## Step 4 Create EC2 On-demand/Spot instances within AutoScaling group template
+> change it to crul to your s3 bucket path.
 
-## Step 5 Create RDS-MySql template
-
-
-
-# References
-
-# Useful Cloudformation Template tools recommendation
-
-The training material is reference from awslab [startup-kit-templates](https://github.com/awslabs/startup-kit-templates) and [ecs-refarch-cloudformation](https://github.com/awslabs/ecs-refarch-cloudformation).
-
-
-
+**Don't forget make your index.php file public.**
 
 
 
