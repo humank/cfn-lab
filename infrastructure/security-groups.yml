@@ -85,7 +85,6 @@ Resources:
         Properties:
             GroupDescription: Enable access to the RDS DB, allow traffic from the PublicSubnets
             VpcId: !Ref VPC
-            Description: 
             SecurityGroupIngress:
             - 
                 CidrIp: !Ref PublicSubnet1CIDR
