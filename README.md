@@ -45,6 +45,16 @@ In case of which 1 you need, recommend to use YAML.
 Of course, you can also transfer the different format in 1 second, check this -> 
 [Tool for converting AWS CloudFormation templates between JSON and YAML formats](https://github.com/awslabs/aws-cfn-template-flip)
 
+### AWS-Shell
+
+[AWS-shell](https://github.com/awslabs/aws-shell)
+
+While developing cloudformation template, need a powerful tool to help you describe resources, validate templates, check existing vpc resources.
+
+The integrated aws-shell library would boots up productively.
+
+![awslabs/aws-shell](images/aws-shell.gif "awslabs/aws-shell")
+
 ### Visual Studio Code
 
 [Visual Studio Code official Web Site ](https://code.visualstudio.com/)
