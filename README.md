@@ -51,6 +51,8 @@ Of course, you can also transfer the different format in 1 second, check this ->
 
 [VS Code plugin for Cloudformation - JSON](https://marketplace.visualstudio.com/items?itemName=aws-scripting-guy.cform)
 
+![VS Code plugin for Cloudformation](images/vscode-cfn-json.gif "Visual Studio Code Cloudformation plugin")
+
 [VS Code plugin for Cloudfromation - YAML](https://marketplace.visualstudio.com/items?itemName=DanielThielking.aws-cloudformation-yaml)
 
 ### Atom
@@ -59,7 +61,11 @@ Of course, you can also transfer the different format in 1 second, check this ->
 
 [Atom atom-cform-yaml package](https://atom.io/packages/atom-cform-yaml)
 
+![ATOM plugin for Cloudformation YAML](images/atom-cfn-yaml.gif "ATOM plugin for Cloudformation YAML")
+
 [Atom atom-cform package](https://atom.io/packages/atom-cform)
+
+![ATOM plugin for Cloudformation JSON](images/atom-cfn-json.gif "ATOM plugin for Cloudformation JSON")
 
 ## OneClick Go
 
