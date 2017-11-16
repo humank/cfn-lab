@@ -129,7 +129,7 @@ Resources:
                 PrivateSubnet1CIDR: !Ref PrivateSubnet1CIDR
                 PrivateSubnet2CIDR: !Ref PrivateSubnet2CIDR
 
-    SecurityGroups:
+    SG:
         Type: AWS::CloudFormation::Stack
         Properties:
             TemplateURL: https://s3.us-east-2.amazonaws.com/cnf-stackset-lab-20171116-dlink/security-groups.yml
@@ -147,15 +147,15 @@ Resources:
                 StackName: !GetAtt ["VPC", "Outputs.StackName"] 
                 VPC: !GetAtt ["VPC","Outputs.VpcId"]
                 Subnets: !GetAtt ["VPC","Outputs.PublicSubnets"]
-                SecurityGroup: !GetAtt ["SecurityGroups","Outputs.LoadBalancerSecurityGroup"]
+                SecurityGroup: !GetAtt ["SG","Outputs.LoadBalancerSecurityGroup"]
 
-    RDSAURORA:
+    AURORA:
         Type: AWS::CloudFormation::Stack
         Properties:
             TemplateURL: https://s3.amazonaws.com/cnf-stackset-lab-20171116-dlink/aurora.yml
             Parameters:
                 StackName: !GetAtt ["VPC", "Outputs.StackName"] 
-                DatabaseSecurityGroups: !GetAtt ["SecurityGroups","Outputs.DbSecurityGroup"]
+                DatabaseSecurityGroups: !GetAtt ["SG","Outputs.DbSecurityGroup"]
                 DatabaseSubnets: !GetAtt ["VPC", "Outputs.PrivateSubnets"]
                 DatabaseBackupRetentionPeriod: !Ref DatabaseBackupRetentionPeriod
                 DatabaseUsername: !Ref DatabaseUsername
@@ -163,14 +163,14 @@ Resources:
                 DatabaseName: !Ref DatabaseName
                 DatabaseInstanceType: !Ref DatabaseInstanceType
 
-    BASTION:
+    ASGBAS:
         Type: AWS::CloudFormation::Stack
         Properties:
             TemplateURL: https://s3.amazonaws.com/cnf-stackset-lab-20171116-dlink/bastion.yml
             Parameters:
                 StackName: !GetAtt ["VPC", "Outputs.StackName"]
                 Subnets: !GetAtt ["VPC","Outputs.PublicSubnets"]
-                BastionHostSecurityGroup: !GetAtt ["SecurityGroups","Outputs.BastionHostSecurityGroup"]
+                BastionHostSecurityGroup: !GetAtt ["SG","Outputs.BastionHostSecurityGroup"]
                 KeyName: !Ref KeyName
                 BastionInstanceType: !Ref BastionInstanceType
                 BastionSSHLocation: !Ref BastionSSHLocation
@@ -183,12 +183,12 @@ Resources:
                 StackName: !GetAtt ["VPC", "Outputs.StackName"]
                 Subnets: !GetAtt ["VPC","Outputs.PublicSubnets"]
                 ALBTargetGroup: !GetAtt ["ALB","Outputs.ALBTargetGroup"]
-                EC2HostSecurityGroup: !GetAtt ["SecurityGroups","Outputs.EC2HostSecurityGroup"]
+                EC2HostSecurityGroup: !GetAtt ["SG","Outputs.EC2HostSecurityGroup"]
                 KeyName: !Ref KeyName
                 AsgInstanceType: !Ref AsgInstanceType
                 AsgTargetCapacity: !Ref AsgTargetCapacity
                 SpotPrice: !Ref SpotPrice
-                PSPostfix: !GetAtt ["RDSAURORA","Outputs.PSPostfix"]
+                PSPostfix: !GetAtt ["AURORA","Outputs.PSPostfix"]
 
 
 Outputs:

@@ -103,13 +103,15 @@ click the button to launch the demo stack in *us-west-2*
 
 ### About StackName
 
+StackName validate name length is 32 chars, by using nested Stackset, recommend to have good naming convention to prevent hit the max-length limit.
+
 Try to use the naming convention : 
 
->${date}-{YourName}-{Number}
+>{YourName}-{Number}
 
 ex:
 
->nov16-Kim-1
+>-Kim-1
 
 
 
