@@ -109,7 +109,7 @@ Mappings:
       '64': ami-2803ac4e
     us-east-1:
       '64': ami-6057e21a
-    us-east-1:
+    us-east-2:
       '64': ami-aa1b34cf
     us-west-1:
       '64': ami-1a033c7a

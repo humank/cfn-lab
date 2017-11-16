@@ -38,10 +38,11 @@ foreach ($arrParams as $param) {
 
 echo "<H1>Hello, you are visting the test page ! </H1>";
 echo "<H2> $serverip </H2>"; 
-$conn = mysqli_connect($hostname, $dbusername, $password,$dbname,'3306') or die("Unable to connect to MySQL");
-if(mysqli_connect_errno()){
-    echo "Failed to connect to Aurora Cluster " . mysqli_connect_error();
-}else{
-    echo "Connected to Aurora using username - $dbusername, password - $password, host - $hostname<br>";
-}
+// $conn = mysqli_connect($hostname, $dbusername, $password,$dbname,'3306') or die("Unable to connect to MySQL");
+// if(mysqli_connect_errno()){
+//     echo "Failed to connect to Aurora Cluster " . mysqli_connect_error();
+// }else{
+//     echo "Connected to Aurora using username - $dbusername, password - $password, host - $hostname<br>";
+// }
+echo "Aurora using username - $dbusername, password - $password, host - $hostname<br>";
 ?>
