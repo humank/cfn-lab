@@ -109,7 +109,7 @@ ex:
 
 Whole Stack creation would take 20 minutes or more, depends on regional resources arrangement status.
 
->After creation completed, check the cloudformation output and click the ***LoadBalancerURL*** link at master stack output or loadbalancer stack output to see the result.
+>After creation completed, check the cloudformation Output and click the ***LoadBalancerURL*** link at master stack Output or loadbalancer stack Outputs to see the result.
 
 ![Application LoadBalancer URL](images/cfn-creation-completed.png "System Architecture")
 
@@ -121,9 +121,13 @@ It's because the created EC2 instances are still running userdata initializing p
 
 The result - Application Load Balancer disptach ingress traffics by round-robin, you would see different instances to serve the traffic.
 
+**Public Subnet 1 - 10.180.8.***
+
 ![Public Subnet 1 - 10.180.8.X](images/round-robin-access-1.png "10.180.8.x")
 
-![Public Subnet 2 - 10.180.8.X](images/round-robin-access-2.png "10.180.8.x")
+**Public Subnet 1 - 10.180.16.***
+
+![Public Subnet 2 - 10.180.16.X](images/round-robin-access-2.png "10.180.16.x")
 
 ## Hands-on practice
 
