@@ -1,6 +1,6 @@
 # Purpose
 
-![System Architecture](images/system-architecture.png "System Architecture")
+![System Architecture](images/system-architecture-v2.png "System Architecture")
 
 To familiar with Infrastructure as code, using AWS Cloudformation template to design a sample web application architecture.
 
