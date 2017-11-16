@@ -66,7 +66,6 @@ Resources:
     Type: AWS::AutoScaling::LaunchConfiguration
     Properties:
       AssociatePublicIpAddress: true
-      #ImageId: !Ref BastionImageId
       ImageId:
         !FindInMap [AWSRegionArch2AMI, !Ref 'AWS::Region', !FindInMap [AWSInstanceType2Arch,
           !Ref 'BastionInstanceType', Arch]]
@@ -80,7 +79,6 @@ Resources:
     Properties:
       DesiredCapacity: 1
       LaunchConfigurationName: !Ref BastionLaunchConfiguration
-      #TargetGroupARNs: [ !Ref ALBTargetGroup ]
       Tags:
         - Key: Name
           Value: BastionHost
@@ -93,17 +91,3 @@ Resources:
     UpdatePolicy:
       AutoScalingRollingUpdate:
         MinInstancesInService: 1
-
-  
-# Outputs:
-#   StackName:
-#         Value:
-#             !Ref AWS::StackName
-#   BastionHost:
-#     Value: !Ref BastionHostEC2Instance
-#     Description: DNS Name of the newly created EC2 instance
-#     Export:
-#       Name:
-#         "Fn::Sub":
-#           - ${StackName}-PublicDnsNameID
-#           - StackName: !Ref AWS::StackName

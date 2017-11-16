@@ -1,6 +1,6 @@
 # Purpose
 
-![System Architecture](images/system-architecture.png "Logo Title Text 1")
+![System Architecture](images/system-architecture.png "System Architecture")
 
 To familiar with Infrastructure as code, using AWS Cloudformation template to design a sample web application architecture.
 
@@ -63,11 +63,67 @@ Of course, you can also transfer the different format in 1 second, check this ->
 
 ## OneClick Go
 
+In order to quickly lanuch CLoudformation Stack, choose 1 of 5 regions which listed here as the below. if you prefer to create stack at other regions, then you just need to click the region selection at aws management console top right cornor.
+
 click the button to launch the demo stack in *Tokyo*
 
 [![cloudformation-launch-stack](https://s3.amazonaws.com/cloudformation-examples/cloudformation-launch-stack.png)](https://console.aws.amazon.com/cloudformation/home?region=ap-northeast-1#/stacks/new?stackName=nov-15-go&templateURL=https://s3.us-east-2.amazonaws.com/cnf-stackset-lab-20171116-dlink/master.yml)
 
-check the cloudformation output and click the ***LoadBalancerURL*** link to see the result.
+***
+
+click the button to launch the demo stack in *us-east-1*
+
+[![cloudformation-launch-stack](https://s3.amazonaws.com/cloudformation-examples/cloudformation-launch-stack.png)](https://console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/new?stackName=nov-15-go&templateURL=https://s3.us-east-2.amazonaws.com/cnf-stackset-lab-20171116-dlink/master.yml)
+
+***
+
+click the button to launch the demo stack in *us-east-2*
+
+[![cloudformation-launch-stack](https://s3.amazonaws.com/cloudformation-examples/cloudformation-launch-stack.png)](https://console.aws.amazon.com/cloudformation/home?region=us-east-2#/stacks/new?stackName=nov-15-go&templateURL=https://s3.us-east-2.amazonaws.com/cnf-stackset-lab-20171116-dlink/master.yml)
+
+***
+
+click the button to launch the demo stack in *us-west-1*
+
+[![cloudformation-launch-stack](https://s3.amazonaws.com/cloudformation-examples/cloudformation-launch-stack.png)](https://console.aws.amazon.com/cloudformation/home?region=us-west-1#/stacks/new?stackName=nov-15-go&templateURL=https://s3.us-east-2.amazonaws.com/cnf-stackset-lab-20171116-dlink/master.yml)
+
+***
+
+click the button to launch the demo stack in *us-west-2*
+
+[![cloudformation-launch-stack](https://s3.amazonaws.com/cloudformation-examples/cloudformation-launch-stack.png)](https://console.aws.amazon.com/cloudformation/home?region=us-west-2#/stacks/new?stackName=nov-15-go&templateURL=https://s3.us-east-2.amazonaws.com/cnf-stackset-lab-20171116-dlink/master.yml)
+
+***
+
+### About StackName
+
+Try to use the naming convention : 
+
+>${date}-{YourName}-{Number}
+
+ex:
+
+>nov16-Kim-1
+
+
+
+Whole Stack creation would take 20 minutes or more, depends on regional resources arrangement status.
+
+>After creation completed, check the cloudformation output and click the ***LoadBalancerURL*** link at master stack output or loadbalancer stack output to see the result.
+
+![Application LoadBalancer URL](images/cfn-creation-completed.png "System Architecture")
+
+If you visit the LoadBalancer URL and get 503 Service Temporarily Unavailable !!! 
+
+![HTTP 503 error](images/alb-check-fail.png "503 Service Temporarily Unavailable")
+
+It's because the created EC2 instances are still running userdata initializing process, and Application Load Balancer Health Check has started to check staus. While initialized then it would be okay.
+
+The result - Application Load Balancer disptach ingress traffics by round-robin, you would see different instances to serve the traffic.
+
+![Public Subnet 1 - 10.180.8.X](images/round-robin-access-1.png "10.180.8.x")
+
+![Public Subnet 2 - 10.180.8.X](images/round-robin-access-2.png "10.180.8.x")
 
 ## Hands-on practice
 

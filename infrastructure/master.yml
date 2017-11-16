@@ -95,14 +95,7 @@ Parameters:
             - 1
             - 7
         Description: The database backup retention period in days.
-
-    # PS-Key-DatabaseName:
-    #     Type: String
-    #     Description: Naming convention - /team/your name/
-    # PS-Key-DatabasePassword:
-    # PS-Key-DatabaseUsername:
-    # PS-Key-DatabaseUrl:
-
+        
 Mappings:
   AWSInstanceType2Arch:
     t2.small:
@@ -196,6 +189,13 @@ Resources:
                 AsgTargetCapacity: !Ref AsgTargetCapacity
                 SpotPrice: !Ref SpotPrice
                 PSPostfix: !GetAtt ["RDSAURORA","Outputs.PSPostfix"]
+
+
+Outputs:
+    LoadBalancerUrl:
+        Description: The URL of the ALB
+        Value: !GetAtt ["ALB","Outputs.LoadBalancerUrl"]
+        
 
     # RDSMYSQL:
     #     Type: AWS::CloudFormation::Stack
