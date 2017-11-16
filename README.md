@@ -125,7 +125,7 @@ The result - Application Load Balancer disptach ingress traffics by round-robin,
 
 ![Public Subnet 1 - 10.180.8.X](images/round-robin-access-1.png "10.180.8.x")
 
-**Public Subnet 1 - 10.180.16.***
+**Public Subnet 2 - 10.180.16.***
 
 ![Public Subnet 2 - 10.180.16.X](images/round-robin-access-2.png "10.180.16.x")
 
