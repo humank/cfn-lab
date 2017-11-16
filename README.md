@@ -119,11 +119,15 @@ Whole Stack creation would take 20 minutes or more, depends on regional resource
 
 ![Application LoadBalancer URL](images/cfn-creation-completed.png "System Architecture")
 
+***
+
 If you visit the LoadBalancer URL and get 503 Service Temporarily Unavailable !!! 
 
 ![HTTP 503 error](images/alb-check-fail.png "503 Service Temporarily Unavailable")
 
 It's because the created EC2 instances are still running userdata initializing process, and Application Load Balancer Health Check has started to check staus. While initialized then it would be okay.
+
+***
 
 The result - Application Load Balancer disptach ingress traffics by round-robin, you would see different instances to serve the traffic.
 
@@ -134,6 +138,8 @@ The result - Application Load Balancer disptach ingress traffics by round-robin,
 **Public Subnet 2 - 10.180.16.***
 
 ![Public Subnet 2 - 10.180.16.X](images/round-robin-access-2.png "10.180.16.x")
+
+***
 
 ## Hands-on practice
 
