@@ -127,6 +127,11 @@ If you visit the LoadBalancer URL and get 503 Service Temporarily Unavailable !!
 
 ![HTTP 503 error](images/alb-check-fail.png "503 Service Temporarily Unavailable")
 
+or you face the AMI Test Page
+
+![AMI Test Page](images/ami-test.png "AMI Test Page")
+
+
 It's because the created EC2 instances are still running userdata initializing process, and Application Load Balancer Health Check has started to check staus. While initialized then it would be okay.
 
 ***
