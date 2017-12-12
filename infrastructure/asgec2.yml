@@ -159,7 +159,7 @@ Resources:
                 curl -sS https://getcomposer.org/installer | php >> /tmp/userdata.log 2>&1 
                 php composer.phar require aws/aws-sdk-php >> /tmp/userdata.log 2>&1 
                 
-                curl -o index.php https://s3.us-east-2.amazonaws.com/cnf-stackset-lab-20171116-dlink/index.php >> /tmp/userdata.log 2>&1 
+                curl -o index.php https://s3-ap-northeast-1.amazonaws.com/cfn-stackset-lab/index.php >> /tmp/userdata.log 2>&1 
                 sed -i 's/defaultRegion/'"$currentregion"'/g' index.php >> /tmp/userdata.log 2>&1
                 sed -i 's/DatabaseURL-/DatabaseURL-'"$auroraArn"'/g' index.php >> /tmp/userdata.log 2>&1 
                 sed -i 's/DatabasePassword-/DatabasePassword-'"$auroraArn"'/g' index.php >> /tmp/userdata.log 2>&1 
