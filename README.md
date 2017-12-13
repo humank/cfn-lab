@@ -83,31 +83,31 @@ In order to quickly lanuch CLoudformation Stack, choose 1 of 5 regions which lis
 
 click the button to launch the demo stack in *Tokyo*
 
-[![cloudformation-launch-stack](https://s3.amazonaws.com/cloudformation-examples/cloudformation-launch-stack.png)](https://console.aws.amazon.com/cloudformation/home?region=ap-northeast-1#/stacks/new?stackName=nov-15-go&templateURL=https://s3-ap-northeast-1.amazonaws.com/cfn-stackset-lab/master.yml)
+[![cloudformation-launch-stack](https://s3.amazonaws.com/cloudformation-examples/cloudformation-launch-stack.png)](https://console.aws.amazon.com/cloudformation/home?region=ap-northeast-1#/stacks/new?stackName=dec-13&templateURL=https://s3-ap-northeast-1.amazonaws.com/cfn-stackset-lab/master.yml)
 
 ***
 
 click the button to launch the demo stack in *us-east-1*
 
-[![cloudformation-launch-stack](https://s3.amazonaws.com/cloudformation-examples/cloudformation-launch-stack.png)](https://console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/new?stackName=nov-15-go&templateURL=https://s3-ap-northeast-1.amazonaws.com/cfn-stackset-lab/master.yml)
+[![cloudformation-launch-stack](https://s3.amazonaws.com/cloudformation-examples/cloudformation-launch-stack.png)](https://console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/new?stackName=dec-13&templateURL=https://s3-ap-northeast-1.amazonaws.com/cfn-stackset-lab/master.yml)
 
 ***
 
 click the button to launch the demo stack in *us-east-2*
 
-[![cloudformation-launch-stack](https://s3.amazonaws.com/cloudformation-examples/cloudformation-launch-stack.png)](https://console.aws.amazon.com/cloudformation/home?region=us-east-2#/stacks/new?stackName=nov-15-go&templateURL=https://s3-ap-northeast-1.amazonaws.com/cfn-stackset-lab/master.yml)
+[![cloudformation-launch-stack](https://s3.amazonaws.com/cloudformation-examples/cloudformation-launch-stack.png)](https://console.aws.amazon.com/cloudformation/home?region=us-east-2#/stacks/new?stackName=dec-13&templateURL=https://s3-ap-northeast-1.amazonaws.com/cfn-stackset-lab/master.yml)
 
 ***
 
 click the button to launch the demo stack in *us-west-1*
 
-[![cloudformation-launch-stack](https://s3.amazonaws.com/cloudformation-examples/cloudformation-launch-stack.png)](https://console.aws.amazon.com/cloudformation/home?region=us-west-1#/stacks/new?stackName=nov-15-go&templateURL=https://s3-ap-northeast-1.amazonaws.com/cfn-stackset-lab/master.yml)
+[![cloudformation-launch-stack](https://s3.amazonaws.com/cloudformation-examples/cloudformation-launch-stack.png)](https://console.aws.amazon.com/cloudformation/home?region=us-west-1#/stacks/new?stackName=dec-13&templateURL=https://s3-ap-northeast-1.amazonaws.com/cfn-stackset-lab/master.yml)
 
 ***
 
 click the button to launch the demo stack in *us-west-2*
 
-[![cloudformation-launch-stack](https://s3.amazonaws.com/cloudformation-examples/cloudformation-launch-stack.png)](https://console.aws.amazon.com/cloudformation/home?region=us-west-2#/stacks/new?stackName=nov-15-go&templateURL=https://s3-ap-northeast-1.amazonaws.com/cfn-stackset-lab/master.yml)
+[![cloudformation-launch-stack](https://s3.amazonaws.com/cloudformation-examples/cloudformation-launch-stack.png)](https://console.aws.amazon.com/cloudformation/home?region=us-west-2#/stacks/new?stackName=dec-13&templateURL=https://s3-ap-northeast-1.amazonaws.com/cfn-stackset-lab/master.yml)
 
 ***
 
