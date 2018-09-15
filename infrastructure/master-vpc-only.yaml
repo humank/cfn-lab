@@ -1,0 +1,144 @@
+Description: >
+    The hands-on  include the following components template design - vpc, 
+    security-groups, load-balancers, ec2 & auto-scaling , rds .
+
+Parameters:              
+    VpcCIDR: 
+        Description: Please enter the IP range (CIDR notation) for this VPC
+        Type: String
+        Default: 10.0.0.0/16
+
+    PublicSubnet1CIDR:
+        Description: Please enter the IP range (CIDR notation) for the public subnet in the first Avaiility Zone
+        Type: String
+        Default: 10.0.1.0/24
+
+    PublicSubnet2CIDR:
+        Description: Please enter the IP range (CIDR notation) for the public subnet in the second Avaiility Zone
+        Type: String
+        Default: 10.0.2.0/24
+
+    PublicSubnet3CIDR:
+        Description: Please enter the IP range (CIDR notation) for the public subnet in the third Avaiility Zone
+        Type: String
+        Default: 10.0.3.0/24
+
+    PrivateSubnet1CIDR:
+        Description: Please enter the IP range (CIDR notation) for the private subnet in the first Avaiility Zone
+        Type: String
+        Default: 10.0.4.0/24
+
+    PrivateSubnet2CIDR:
+        Description: Please enter the IP range (CIDR notation) for the private subnet in the second Avaiility Zone
+        Type: String
+        Default: 10.0.5.0/24
+
+    PrivateSubnet3CIDR:
+        Description: Please enter the IP range (CIDR notation) for the private subnet in the third Avaiility Zone
+        Type: String
+        Default: 10.0.6.0/24
+
+    KeyName:
+        Description: Name of an existing EC2 KeyPair to enable SSH access to the web server
+        Type: AWS::EC2::KeyPair::KeyName
+        ConstraintDescription: must be the name of an existing EC2 KeyPair.
+        Default: labuserkey
+
+    AsgInstanceType:
+        Description: The instance which you request for spot instance
+        Default: m3.medium
+        Type: String
+        AllowedValues: [t2.small, t2.medium,m3.medium]
+
+    AsgTargetCapacity:
+        Description: The request ec2 instance spot capacity
+        Type: String
+        Default: 2
+    
+    SpotPrice:
+        Type: Number
+        Description: spot price for spot instances, if number >0 would be consider to request spot instance, otherwise would be on-demand instance
+        Default: 0.02
+
+    BastionSSHLocation:
+        Description: Lockdown SSH access to the bastion host (default can be accessed from anywhere)
+        Type: String
+        MinLength: '9'
+        MaxLength: '18'
+        Default: 0.0.0.0/0
+        AllowedPattern: (\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})/(\d{1,2})
+        ConstraintDescription: must be a valid CIDR range of the form on-premise ip x.x.x.x/x.
+
+    BastionInstanceType:
+        Description: WebServer EC2 instance type
+        Type: String
+        Default: t2.micro
+
+    BastionImageId:
+        Description: Use Amazon Linux AMI 2017.09.1 HVM - ami-2803ac4e
+        Type: String
+        Default: ami-2803ac4e
+
+    DatabaseInstanceType:
+        Default: db.t2.small
+        Description: The instance type to use for the database.
+        Type: String
+
+    DatabaseName:
+      Type: String
+      Description: Database name
+      Default: dlinkdemo
+
+    DatabasePassword:
+        NoEcho: 'true'
+        Type: String
+        Default: aurora12345
+    DatabaseUsername:
+        Description: The database admin account user name.
+        Type: String
+        Default: aurora
+
+    DatabaseBackupRetentionPeriod:
+        Type: String
+        Default: 7
+        AllowedValues:
+            - 1
+            - 7
+        Description: The database backup retention period in days.
+        
+Mappings:
+  AWSInstanceType2Arch:
+    t2.small:
+      Arch: '64' 
+    t2.medium: 
+      Arch: '64' 
+    m3.medium:
+      Arch: '64' 
+  AWSRegionArch2AMI:
+    ap-northeast-1:
+      '64': ami-2803ac4e
+    us-east-1:
+      '64': ami-6057e21a
+    us-east-2:
+      '64': ami-aa1b34cf
+    us-west-1:
+      '64': ami-1a033c7a
+    us-west-2:
+      '64': ami-32d8124a
+
+Resources:
+
+    VPC:
+        Type: AWS::CloudFormation::Stack
+        Properties:
+            TemplateURL: https://s3-ap-northeast-1.amazonaws.com/kimsharing/vpc.yml
+            Parameters:
+                StackName:    !Ref AWS::StackName                
+                VpcCIDR:            !Ref VpcCIDR
+                PublicSubnet1CIDR:  !Ref PublicSubnet1CIDR
+                PublicSubnet2CIDR:  !Ref PublicSubnet2CIDR
+                PublicSubnet3CIDR:  !Ref PublicSubnet3CIDR
+                PrivateSubnet1CIDR: !Ref PrivateSubnet1CIDR
+                PrivateSubnet2CIDR: !Ref PrivateSubnet2CIDR
+                PrivateSubnet3CIDR: !Ref PrivateSubnet3CIDR
+
